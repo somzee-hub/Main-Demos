@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="gbb_tool_breakage_list" model="ir.ui.view">
+        <field name="name">gbb.tool.breakage.list</field>
+        <field name="model">gbb.tool.breakage</field>
+        <field name="arch" type="xml">
+            <list string="Tool Breakage (GBB/PROD/TB)" editable="top">
+                <field name="date"/>
+                <field name="name"/>
+                <field name="workcenter_id"/>
+                <field name="operator_id"/>
+                <field name="programmer_id" optional="show"/>
+                <field name="responsible_id" optional="hide"/>
+                <field name="tool_qty" sum="Tools"/>
+                <field name="amount" sum="Amount"/>
+                <field name="shift" optional="hide"/>
+                <field name="reason"/>
+                <field name="action" optional="show"/>
+                <field name="learning" optional="hide"/>
+            </list>
+        </field>
+    </record>
+    <record id="action_gbb_tool_breakage" model="ir.actions.act_window">
+        <field name="name">Tool Breakage</field>
+        <field name="res_model">gbb.tool.breakage</field>
+        <field name="view_mode">list,pivot,graph</field>
+    </record>
+
+    <record id="gbb_incident_form" model="ir.ui.view">
+        <field name="name">gbb.incident.form</field>
+        <field name="model">gbb.incident</field>
+        <field name="arch" type="xml">
+            <form string="Accident / Incident (GBB/HR/08)">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="incident_datetime"/>
+                            <field name="reporting_date"/>
+                            <field name="severity" widget="radio" options="{'horizontal': true}"/>
+                        </group>
+                        <group>
+                            <field name="employee_id"/>
+                            <field name="department_id"/>
+                            <field name="location"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="name"/>
+                        <field name="prevention"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+    <record id="gbb_incident_list" model="ir.ui.view">
+        <field name="name">gbb.incident.list</field>
+        <field name="model">gbb.incident</field>
+        <field name="arch" type="xml">
+            <list string="Accident / Incident" decoration-danger="severity != 'minor'">
+                <field name="incident_datetime"/>
+                <field name="employee_id"/>
+                <field name="department_id"/>
+                <field name="location"/>
+                <field name="severity" widget="badge"/>
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+    <record id="action_gbb_incident" model="ir.actions.act_window">
+        <field name="name">Accident / Incident</field>
+        <field name="res_model">gbb.incident</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="gbb_gate_pass_list" model="ir.ui.view">
+        <field name="name">gbb.gate.pass.list</field>
+        <field name="model">gbb.gate.pass</field>
+        <field name="arch" type="xml">
+            <list string="Security In / Out" editable="top">
+                <field name="date"/>
+                <field name="employee_id"/>
+                <field name="entry_type"/>
+                <field name="time_in" widget="float_time"/>
+                <field name="time_out" widget="float_time"/>
+                <field name="on_duty_late" optional="hide"/>
+                <field name="deduct_minutes"/>
+                <field name="reason"/>
+                <field name="logged_by_id" widget="many2one_avatar_user" optional="show"/>
+                <field name="attendance_id" optional="hide"/>
+                <button name="action_post_attendance" type="object" string="Post to Attendance" icon="fa-clock-o"
+                        invisible="entry_type != 'missing' or attendance_id"/>
+            </list>
+        </field>
+    </record>
+    <record id="action_gbb_gate_pass" model="ir.actions.act_window">
+        <field name="name">Security In / Out</field>
+        <field name="res_model">gbb.gate.pass</field>
+        <field name="view_mode">list</field>
+    </record>
+</odoo>

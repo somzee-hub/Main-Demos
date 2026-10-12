@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="fixture_type_vmc" model="gbb.fixture.type"><field name="name">VMC</field><field name="sequence">0</field></record>
+        <record id="fixture_type_hmc" model="gbb.fixture.type"><field name="name">HMC</field><field name="sequence">10</field></record>
+        <record id="fixture_type_vtl" model="gbb.fixture.type"><field name="name">VTL</field><field name="sequence">20</field></record>
+        <record id="fixture_type_vmc_4th_axis" model="gbb.fixture.type"><field name="name">VMC 4TH AXIS</field><field name="sequence">30</field></record>
+        <record id="fixture_type_vmc_bed_type" model="gbb.fixture.type"><field name="name">VMC Bed Type</field><field name="sequence">40</field></record>
+        <record id="fixture_type_vmc_hyd" model="gbb.fixture.type"><field name="name">VMC HYD</field><field name="sequence">50</field></record>
+        <record id="fixture_type_hmc_hyd" model="gbb.fixture.type"><field name="name">HMC HYD</field><field name="sequence">60</field></record>
+        <record id="fixture_type_std_zps_block" model="gbb.fixture.type"><field name="name">STD ZPS Block</field><field name="sequence">70</field></record>
+        <record id="fixture_type_checking_fixture" model="gbb.fixture.type"><field name="name">Checking Fixture</field><field name="sequence">80</field></record>
+        <record id="fixture_type_cnc" model="gbb.fixture.type"><field name="name">CNC</field><field name="sequence">90</field></record>
+        <record id="fixture_type_hyd_power_pack" model="gbb.fixture.type"><field name="name">HYD Power Pack</field><field name="sequence">100</field></record>
+        <record id="fixture_type_cradle" model="gbb.fixture.type"><field name="name">Cradle</field><field name="sequence">110</field></record>
+        <record id="fixture_type_spares" model="gbb.fixture.type"><field name="name">Spares</field><field name="sequence">120</field></record>
+        <record id="fixture_type_vmc_rotary" model="gbb.fixture.type"><field name="name">VMC Rotary</field><field name="sequence">130</field></record>
+        <record id="fixture_type_5th_axis" model="gbb.fixture.type"><field name="name">5th Axis</field><field name="sequence">140</field></record>
+        <record id="fixture_type_spm" model="gbb.fixture.type"><field name="name">SPM</field><field name="sequence">150</field></record>
+        <record id="fixture_type_mechanical" model="gbb.fixture.type"><field name="name">Mechanical</field><field name="sequence">160</field></record>
+        <record id="fixture_type_tbs_block" model="gbb.fixture.type"><field name="name">TBS Block</field><field name="sequence">170</field></record>
+        <record id="categ_fixtures" model="product.category"><field name="name">Fixtures (Made to Order)</field></record>
+        <record id="categ_fixture_parts" model="product.category"><field name="name">Fixture Parts (Manufactured)</field></record>
+        <record id="categ_raw_material" model="product.category"><field name="name">Raw Material</field></record>
+        <record id="categ_boughtout" model="product.category"><field name="name">Bought-out / Standard Parts</field></record>
+        <record id="categ_consumable" model="product.category"><field name="name">Consumables</field></record>
+        <record id="categ_tooling" model="product.category"><field name="name">Tooling</field></record>
+        <record id="categ_jobwork" model="product.category"><field name="name">Job Work Services</field></record>
+        <record id="crm.stage_lead1" model="crm.stage"><field name="name">Open</field><field name="sequence">1</field></record>
+        <record id="crm.stage_lead2" model="crm.stage"><field name="name">Under Process</field><field name="sequence">2</field></record>
+        <record id="stage_layout_submit" model="crm.stage"><field name="name">Layout Submit</field><field name="sequence">3</field></record>
+        <record id="crm.stage_lead3" model="crm.stage"><field name="name">Quote Submit</field><field name="sequence">4</field></record>
+        <record id="stage_hold" model="crm.stage"><field name="name">Hold</field><field name="sequence">5</field></record>
+        <record id="crm.stage_lead4" model="crm.stage"><field name="name">Received (Order)</field><field name="sequence">70</field></record>
+        <record id="lost_reason_regret" model="crm.lost.reason"><field name="name">Regret / Not feasible</field></record>
+        <record id="lost_reason_price" model="crm.lost.reason"><field name="name">Price not accepted</field></record>
+        <record id="lost_reason_competitor" model="crm.lost.reason"><field name="name">Lost to competitor</field></record>
+        <record id="lost_reason_closed" model="crm.lost.reason"><field name="name">Closed by customer</field></record>
+        <record id="payment_term_gbb" model="account.payment.term">
+            <field name="name">50% Advance, 40% + Taxes Against PI, 10% After Trial</field>
+            <field name="line_ids" eval="[(5, 0), (0, 0, {'value': 'percent', 'value_amount': 50.0, 'nb_days': 0}), (0, 0, {'value': 'percent', 'value_amount': 40.0, 'nb_days': 30}), (0, 0, {'value': 'percent', 'value_amount': 10.0, 'nb_days': 60})]"/>
+        </record>
+        <record id="task_stage_design_todo" model="project.task.type"><field name="name">Planned</field><field name="sequence">1</field><field name="fold" eval="False"/><field name="gbb_design_task_stage" eval="True"/></record>
+        <record id="task_stage_design_progress" model="project.task.type"><field name="name">In Progress</field><field name="sequence">2</field><field name="fold" eval="False"/><field name="gbb_design_task_stage" eval="True"/></record>
+        <record id="task_stage_design_done" model="project.task.type"><field name="name">Done</field><field name="sequence">3</field><field name="fold" eval="True"/><field name="gbb_design_task_stage" eval="True"/></record>
+        <record id="task_stage_cc_received" model="project.task.type"><field name="name">Complaint Received</field><field name="sequence">1</field><field name="fold" eval="False"/></record>
+        <record id="task_stage_cc_assigned" model="project.task.type"><field name="name">Assigned Task</field><field name="sequence">2</field><field name="fold" eval="False"/></record>
+        <record id="task_stage_cc_trial1" model="project.task.type"><field name="name">Trial 1</field><field name="sequence">3</field><field name="fold" eval="False"/></record>
+        <record id="task_stage_cc_trial2" model="project.task.type"><field name="name">Trial 2</field><field name="sequence">4</field><field name="fold" eval="False"/></record>
+        <record id="task_stage_cc_resolved" model="project.task.type"><field name="name">Resolved</field><field name="sequence">5</field><field name="fold" eval="False"/></record>
+        <record id="task_stage_cc_closed" model="project.task.type"><field name="name">Closed</field><field name="sequence">6</field><field name="fold" eval="True"/></record>
+        <record id="project_customer_complaints" model="project.project">
+            <field name="name">Customer Complaints (GBB/MKT/CF-70)</field>
+            <field name="gbb_is_complaint_project" eval="True"/>
+            <field name="label_tasks">Complaints</field>
+            <field name="allow_timesheets" eval="True"/>
+            <field name="type_ids" eval="[(6, 0, [ref('task_stage_cc_received'), ref('task_stage_cc_assigned'), ref('task_stage_cc_trial1'), ref('task_stage_cc_trial2'), ref('task_stage_cc_resolved'), ref('task_stage_cc_closed')])]"/>
+        </record>
+        <record id="location_shop_floor" model="stock.location">
+            <field name="name">Shop Floor</field>
+            <field name="location_id" ref="stock.stock_location_stock"/>
+            <field name="usage">internal</field>
+        </record>
+        <record id="picking_type_mr" model="stock.picking.type">
+            <field name="name">Material Requisition / Issue</field>
+            <field name="code">internal</field>
+            <field name="sequence_code">MR</field>
+            <field name="warehouse_id" ref="stock.warehouse0"/>
+            <field name="default_location_src_id" ref="stock.stock_location_stock"/>
+            <field name="default_location_dest_id" ref="location_shop_floor"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        <record id="picking_type_returnable" model="stock.picking.type">
+            <field name="name">Returnable Challan</field>
+            <field name="code">outgoing</field>
+            <field name="sequence_code">RC</field>
+            <field name="warehouse_id" ref="stock.warehouse0"/>
+            <field name="default_location_src_id" ref="stock.stock_location_stock"/>
+            <field name="default_location_dest_id" ref="stock.stock_location_customers"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        <record id="equipment_categ_machine" model="maintenance.equipment.category"><field name="name">Machines</field></record>
+        <record id="equipment_categ_instrument" model="maintenance.equipment.category"><field name="name">Measuring Instruments (Calibration)</field></record>
+        <record id="leave_type_sick" model="hr.leave.type"><field name="name">Sick Leave</field><field name="time_type">leave</field><field name="unpaid" eval="False"/><field name="support_document" eval="True"/><field name="requires_allocation" eval="False"/><field name="company_id" ref="base.main_company"/></record>
+        <record id="leave_type_casual" model="hr.leave.type"><field name="name">Casual Leave</field><field name="time_type">leave</field><field name="unpaid" eval="False"/><field name="support_document" eval="False"/><field name="requires_allocation" eval="False"/><field name="company_id" ref="base.main_company"/></record>
+        <record id="leave_type_earned" model="hr.leave.type"><field name="name">Earned Leave</field><field name="time_type">leave</field><field name="unpaid" eval="False"/><field name="support_document" eval="False"/><field name="requires_allocation" eval="False"/><field name="company_id" ref="base.main_company"/></record>
+        <record id="leave_type_unpaid" model="hr.leave.type"><field name="name">Unpaid Leave</field><field name="time_type">leave</field><field name="unpaid" eval="True"/><field name="support_document" eval="False"/><field name="requires_allocation" eval="False"/><field name="company_id" ref="base.main_company"/></record>
+        <record id="leave_type_outstation" model="hr.leave.type"><field name="name">On Duty / Outstation</field><field name="time_type">other</field><field name="unpaid" eval="False"/><field name="support_document" eval="False"/><field name="requires_allocation" eval="False"/><field name="company_id" ref="base.main_company"/></record>
+        <record id="resume_type_training" model="hr.resume.line.type"><field name="name">Internal Training (GBB/HR/04)</field><field name="sequence">5</field></record>
+        <record id="skill_type_machining" model="hr.skill.type"><field name="name">Machining</field></record>
+        <record id="skill_level_machining_initial" model="hr.skill.level"><field name="name">Initial (&lt;60%)</field><field name="level_progress">30</field><field name="skill_type_id" ref="skill_type_machining"/></record>
+        <record id="skill_level_machining_mid" model="hr.skill.level"><field name="name">Mid (60-85%)</field><field name="level_progress">70</field><field name="skill_type_id" ref="skill_type_machining"/></record>
+        <record id="skill_level_machining_expert" model="hr.skill.level"><field name="name">Expert (85%+)</field><field name="level_progress">100</field><field name="skill_type_id" ref="skill_type_machining"/></record>
+        <record id="skill_vmc_operation" model="hr.skill"><field name="name">VMC Operation</field><field name="skill_type_id" ref="skill_type_machining"/></record>
+        <record id="skill_hmc_operation" model="hr.skill"><field name="name">HMC Operation</field><field name="skill_type_id" ref="skill_type_machining"/></record>
+        <record id="skill_vtl_operation" model="hr.skill"><field name="name">VTL Operation</field><field name="skill_type_id" ref="skill_type_machining"/></record>
+        <record id="skill_cnc_turning" model="hr.skill"><field name="name">CNC Turning</field><field name="skill_type_id" ref="skill_type_machining"/></record>
+        <record id="skill_cylindrical_grinding" model="hr.skill"><field name="name">Cylindrical Grinding</field><field name="skill_type_id" ref="skill_type_machining"/></record>
+        <record id="skill_surface_grinding" model="hr.skill"><field name="name">Surface Grinding</field><field name="skill_type_id" ref="skill_type_machining"/></record>
+        <record id="skill_cnc_programming" model="hr.skill"><field name="name">CNC Programming</field><field name="skill_type_id" ref="skill_type_machining"/></record>
+        <record id="skill_type_fixture_assembly" model="hr.skill.type"><field name="name">Fixture Assembly</field></record>
+        <record id="skill_level_fixture_assembly_initial" model="hr.skill.level"><field name="name">Initial (&lt;60%)</field><field name="level_progress">30</field><field name="skill_type_id" ref="skill_type_fixture_assembly"/></record>
+        <record id="skill_level_fixture_assembly_mid" model="hr.skill.level"><field name="name">Mid (60-85%)</field><field name="level_progress">70</field><field name="skill_type_id" ref="skill_type_fixture_assembly"/></record>
+        <record id="skill_level_fixture_assembly_expert" model="hr.skill.level"><field name="name">Expert (85%+)</field><field name="level_progress">100</field><field name="skill_type_id" ref="skill_type_fixture_assembly"/></record>
+        <record id="skill_fixture_assembly" model="hr.skill"><field name="name">Fixture Assembly</field><field name="skill_type_id" ref="skill_type_fixture_assembly"/></record>
+        <record id="skill_hydraulic_piping" model="hr.skill"><field name="name">Hydraulic Piping</field><field name="skill_type_id" ref="skill_type_fixture_assembly"/></record>
+        <record id="skill_fixture_proving_trial" model="hr.skill"><field name="name">Fixture Proving / Trial</field><field name="skill_type_id" ref="skill_type_fixture_assembly"/></record>
+        <record id="skill_inspection_cmm_gauges" model="hr.skill"><field name="name">Inspection (CMM / gauges)</field><field name="skill_type_id" ref="skill_type_fixture_assembly"/></record>
+        <record id="skill_type_design" model="hr.skill.type"><field name="name">Design</field></record>
+        <record id="skill_level_design_initial" model="hr.skill.level"><field name="name">Initial (&lt;60%)</field><field name="level_progress">30</field><field name="skill_type_id" ref="skill_type_design"/></record>
+        <record id="skill_level_design_mid" model="hr.skill.level"><field name="name">Mid (60-85%)</field><field name="level_progress">70</field><field name="skill_type_id" ref="skill_type_design"/></record>
+        <record id="skill_level_design_expert" model="hr.skill.level"><field name="name">Expert (85%+)</field><field name="level_progress">100</field><field name="skill_type_id" ref="skill_type_design"/></record>
+        <record id="skill_3d_modeling" model="hr.skill"><field name="name">3D Modeling</field><field name="skill_type_id" ref="skill_type_design"/></record>
+        <record id="skill_2d_drafting" model="hr.skill"><field name="name">2D Drafting</field><field name="skill_type_id" ref="skill_type_design"/></record>
+        <record id="skill_deflection_analysis" model="hr.skill"><field name="name">Deflection Analysis</field><field name="skill_type_id" ref="skill_type_design"/></record>
+        <record id="skill_bom_preparation" model="hr.skill"><field name="name">BOM Preparation</field><field name="skill_type_id" ref="skill_type_design"/></record>
+        <record id="plan_exit_clearance" model="mail.activity.plan">
+            <field name="name">Exit Clearance (GBB/HR/07)</field>
+            <field name="res_model">hr.employee</field>
+        </record>
+        <record id="plan_exit_clearance_0" model="mail.activity.plan.template">
+            <field name="plan_id" ref="plan_exit_clearance"/>
+            <field name="sequence">0</field>
+            <field name="summary">Collect resignation letter and confirm last working day</field>
+            <field name="responsible_type">on_demand</field>
+            <field name="activity_type_id" ref="mail.mail_activity_data_todo"/>
+        </record>
+        <record id="plan_exit_clearance_1" model="mail.activity.plan.template">
+            <field name="plan_id" ref="plan_exit_clearance"/>
+            <field name="sequence">1</field>
+            <field name="summary">Store: return of tools, gauges and safety shoes</field>
+            <field name="responsible_type">on_demand</field>
+            <field name="activity_type_id" ref="mail.mail_activity_data_todo"/>
+        </record>
+        <record id="plan_exit_clearance_2" model="mail.activity.plan.template">
+            <field name="plan_id" ref="plan_exit_clearance"/>
+            <field name="sequence">2</field>
+            <field name="summary">Design: return drawings, models and data</field>
+            <field name="responsible_type">on_demand</field>
+            <field name="activity_type_id" ref="mail.mail_activity_data_todo"/>
+        </record>
+        <record id="plan_exit_clearance_3" model="mail.activity.plan.template">
+            <field name="plan_id" ref="plan_exit_clearance"/>
+            <field name="sequence">3</field>
+            <field name="summary">Accounts: recover outstanding advance</field>
+            <field name="responsible_type">on_demand</field>
+            <field name="activity_type_id" ref="mail.mail_activity_data_todo"/>
+        </record>
+        <record id="plan_exit_clearance_4" model="mail.activity.plan.template">
+            <field name="plan_id" ref="plan_exit_clearance"/>
+            <field name="sequence">4</field>
+            <field name="summary">IT / Admin: ID card and login disabled</field>
+            <field name="responsible_type">on_demand</field>
+            <field name="activity_type_id" ref="mail.mail_activity_data_todo"/>
+        </record>
+        <record id="plan_exit_clearance_5" model="mail.activity.plan.template">
+            <field name="plan_id" ref="plan_exit_clearance"/>
+            <field name="sequence">5</field>
+            <field name="summary">HR: full and final settlement</field>
+            <field name="responsible_type">on_demand</field>
+            <field name="activity_type_id" ref="mail.mail_activity_data_todo"/>
+        </record>
+        <record id="sales_team.team_sales_department" model="crm.team">
+            <field name="name">GBB Sales</field>
+            <field name="invoiced_target">15000000</field>
+        </record>
+        <record id="survey_feedback" model="survey.survey">
+            <field name="title">GBB Customer Feedback (GBB/MKT/CF-06)</field>
+            <field name="survey_type">survey</field>
+            <field name="access_mode">token</field>
+            <field name="scoring_type">scoring_without_answers</field>
+            <field name="scoring_success_min">75</field>
+            <field name="description" type="html"><p>Please rate GBB Industries on each parameter: 4 Excellent, 3 Good, 2 Fair, 1 Poor. Grade A 90%+, B 75-89%, C 60-74%, D below 60%.</p></field>
+        </record>
+        <record id="survey_feedback_q1" model="survey.question">
+            <field name="survey_id" ref="survey_feedback"/>
+            <field name="sequence">1</field>
+            <field name="title">Product Quality</field>
+            <field name="question_type">simple_choice</field>
+            <field name="constr_mandatory" eval="True"/>
+        </record>
+        <record id="survey_feedback_q1_a4" model="survey.question.answer"><field name="question_id" ref="survey_feedback_q1"/><field name="sequence">1</field><field name="value">Excellent</field><field name="answer_score">4</field></record>
+        <record id="survey_feedback_q1_a3" model="survey.question.answer"><field name="question_id" ref="survey_feedback_q1"/><field name="sequence">2</field><field name="value">Good</field><field name="answer_score">3</field></record>
+        <record id="survey_feedback_q1_a2" model="survey.question.answer"><field name="question_id" ref="survey_feedback_q1"/><field name="sequence">3</field><field name="value">Fair</field><field name="answer_score">2</field></record>
+        <record id="survey_feedback_q1_a1" model="survey.question.answer"><field name="question_id" ref="survey_feedback_q1"/><field name="sequence">4</field><field name="value">Poor</field><field name="answer_score">1</field></record>
+        <record id="survey_feedback_q2" model="survey.question">
+            <field name="survey_id" ref="survey_feedback"/>
+            <field name="sequence">2</field>
+            <field name="title">On-time Delivery</field>
+            <field name="question_type">simple_choice</field>
+            <field name="constr_mandatory" eval="True"/>
+        </record>
+        <record id="survey_feedback_q2_a4" model="survey.question.answer"><field name="question_id" ref="survey_feedback_q2"/><field name="sequence">1</field><field name="value">Excellent</field><field name="answer_score">4</field></record>
+        <record id="survey_feedback_q2_a3" model="survey.question.answer"><field name="question_id" ref="survey_feedback_q2"/><field name="sequence">2</field><field name="value">Good</field><field name="answer_score">3</field></record>
+        <record id="survey_feedback_q2_a2" model="survey.question.answer"><field name="question_id" ref="survey_feedback_q2"/><field name="sequence">3</field><field name="value">Fair</field><field name="answer_score">2</field></record>
+        <record id="survey_feedback_q2_a1" model="survey.question.answer"><field name="question_id" ref="survey_feedback_q2"/><field name="sequence">4</field><field name="value">Poor</field><field name="answer_score">1</field></record>
+        <record id="survey_feedback_q3" model="survey.question">
+            <field name="survey_id" ref="survey_feedback"/>
+            <field name="sequence">3</field>
+            <field name="title">Commercial Documents</field>
+            <field name="question_type">simple_choice</field>
+            <field name="constr_mandatory" eval="True"/>
+        </record>
+        <record id="survey_feedback_q3_a4" model="survey.question.answer"><field name="question_id" ref="survey_feedback_q3"/><field name="sequence">1</field><field name="value">Excellent</field><field name="answer_score">4</field></record>
+        <record id="survey_feedback_q3_a3" model="survey.question.answer"><field name="question_id" ref="survey_feedback_q3"/><field name="sequence">2</field><field name="value">Good</field><field name="answer_score">3</field></record>
+        <record id="survey_feedback_q3_a2" model="survey.question.answer"><field name="question_id" ref="survey_feedback_q3"/><field name="sequence">3</field><field name="value">Fair</field><field name="answer_score">2</field></record>
+        <record id="survey_feedback_q3_a1" model="survey.question.answer"><field name="question_id" ref="survey_feedback_q3"/><field name="sequence">4</field><field name="value">Poor</field><field name="answer_score">1</field></record>
+        <record id="survey_feedback_q4" model="survey.question">
+            <field name="survey_id" ref="survey_feedback"/>
+            <field name="sequence">4</field>
+            <field name="title">Response to New Inquiries</field>
+            <field name="question_type">simple_choice</field>
+            <field name="constr_mandatory" eval="True"/>
+        </record>
+        <record id="survey_feedback_q4_a4" model="survey.question.answer"><field name="question_id" ref="survey_feedback_q4"/><field name="sequence">1</field><field name="value">Excellent</field><field name="answer_score">4</field></record>
+        <record id="survey_feedback_q4_a3" model="survey.question.answer"><field name="question_id" ref="survey_feedback_q4"/><field name="sequence">2</field><field name="value">Good</field><field name="answer_score">3</field></record>
+        <record id="survey_feedback_q4_a2" model="survey.question.answer"><field name="question_id" ref="survey_feedback_q4"/><field name="sequence">3</field><field name="value">Fair</field><field name="answer_score">2</field></record>
+        <record id="survey_feedback_q4_a1" model="survey.question.answer"><field name="question_id" ref="survey_feedback_q4"/><field name="sequence">4</field><field name="value">Poor</field><field name="answer_score">1</field></record>
+        <record id="survey_feedback_q5" model="survey.question">
+            <field name="survey_id" ref="survey_feedback"/>
+            <field name="sequence">5</field>
+            <field name="title">Representative Visit</field>
+            <field name="question_type">simple_choice</field>
+            <field name="constr_mandatory" eval="True"/>
+        </record>
+        <record id="survey_feedback_q5_a4" model="survey.question.answer"><field name="question_id" ref="survey_feedback_q5"/><field name="sequence">1</field><field name="value">Excellent</field><field name="answer_score">4</field></record>
+        <record id="survey_feedback_q5_a3" model="survey.question.answer"><field name="question_id" ref="survey_feedback_q5"/><field name="sequence">2</field><field name="value">Good</field><field name="answer_score">3</field></record>
+        <record id="survey_feedback_q5_a2" model="survey.question.answer"><field name="question_id" ref="survey_feedback_q5"/><field name="sequence">3</field><field name="value">Fair</field><field name="answer_score">2</field></record>
+        <record id="survey_feedback_q5_a1" model="survey.question.answer"><field name="question_id" ref="survey_feedback_q5"/><field name="sequence">4</field><field name="value">Poor</field><field name="answer_score">1</field></record>
+        <record id="survey_feedback_q6" model="survey.question">
+            <field name="survey_id" ref="survey_feedback"/>
+            <field name="sequence">6</field>
+            <field name="title">Post-visit Response</field>
+            <field name="question_type">simple_choice</field>
+            <field name="constr_mandatory" eval="True"/>
+        </record>
+        <record id="survey_feedback_q6_a4" model="survey.question.answer"><field name="question_id" ref="survey_feedback_q6"/><field name="sequence">1</field><field name="value">Excellent</field><field name="answer_score">4</field></record>
+        <record id="survey_feedback_q6_a3" model="survey.question.answer"><field name="question_id" ref="survey_feedback_q6"/><field name="sequence">2</field><field name="value">Good</field><field name="answer_score">3</field></record>
+        <record id="survey_feedback_q6_a2" model="survey.question.answer"><field name="question_id" ref="survey_feedback_q6"/><field name="sequence">3</field><field name="value">Fair</field><field name="answer_score">2</field></record>
+        <record id="survey_feedback_q6_a1" model="survey.question.answer"><field name="question_id" ref="survey_feedback_q6"/><field name="sequence">4</field><field name="value">Poor</field><field name="answer_score">1</field></record>
+        <record id="survey_feedback_q7" model="survey.question">
+            <field name="survey_id" ref="survey_feedback"/>
+            <field name="sequence">7</field>
+            <field name="title">Complaint Handling</field>
+            <field name="question_type">simple_choice</field>
+            <field name="constr_mandatory" eval="True"/>
+        </record>
+        <record id="survey_feedback_q7_a4" model="survey.question.answer"><field name="question_id" ref="survey_feedback_q7"/><field name="sequence">1</field><field name="value">Excellent</field><field name="answer_score">4</field></record>
+        <record id="survey_feedback_q7_a3" model="survey.question.answer"><field name="question_id" ref="survey_feedback_q7"/><field name="sequence">2</field><field name="value">Good</field><field name="answer_score">3</field></record>
+        <record id="survey_feedback_q7_a2" model="survey.question.answer"><field name="question_id" ref="survey_feedback_q7"/><field name="sequence">3</field><field name="value">Fair</field><field name="answer_score">2</field></record>
+        <record id="survey_feedback_q7_a1" model="survey.question.answer"><field name="question_id" ref="survey_feedback_q7"/><field name="sequence">4</field><field name="value">Poor</field><field name="answer_score">1</field></record>
+        <record id="survey_feedback_q8" model="survey.question">
+            <field name="survey_id" ref="survey_feedback"/>
+            <field name="sequence">8</field>
+            <field name="title">New Product Development</field>
+            <field name="question_type">simple_choice</field>
+            <field name="constr_mandatory" eval="True"/>
+        </record>
+        <record id="survey_feedback_q8_a4" model="survey.question.answer"><field name="question_id" ref="survey_feedback_q8"/><field name="sequence">1</field><field name="value">Excellent</field><field name="answer_score">4</field></record>
+        <record id="survey_feedback_q8_a3" model="survey.question.answer"><field name="question_id" ref="survey_feedback_q8"/><field name="sequence">2</field><field name="value">Good</field><field name="answer_score">3</field></record>
+        <record id="survey_feedback_q8_a2" model="survey.question.answer"><field name="question_id" ref="survey_feedback_q8"/><field name="sequence">3</field><field name="value">Fair</field><field name="answer_score">2</field></record>
+        <record id="survey_feedback_q8_a1" model="survey.question.answer"><field name="question_id" ref="survey_feedback_q8"/><field name="sequence">4</field><field name="value">Poor</field><field name="answer_score">1</field></record>
+        <record id="survey_feedback_q9" model="survey.question">
+            <field name="survey_id" ref="survey_feedback"/>
+            <field name="sequence">9</field>
+            <field name="title">Order Acceptance &amp; Feedback</field>
+            <field name="question_type">simple_choice</field>
+            <field name="constr_mandatory" eval="True"/>
+        </record>
+        <record id="survey_feedback_q9_a4" model="survey.question.answer"><field name="question_id" ref="survey_feedback_q9"/><field name="sequence">1</field><field name="value">Excellent</field><field name="answer_score">4</field></record>
+        <record id="survey_feedback_q9_a3" model="survey.question.answer"><field name="question_id" ref="survey_feedback_q9"/><field name="sequence">2</field><field name="value">Good</field><field name="answer_score">3</field></record>
+        <record id="survey_feedback_q9_a2" model="survey.question.answer"><field name="question_id" ref="survey_feedback_q9"/><field name="sequence">3</field><field name="value">Fair</field><field name="answer_score">2</field></record>
+        <record id="survey_feedback_q9_a1" model="survey.question.answer"><field name="question_id" ref="survey_feedback_q9"/><field name="sequence">4</field><field name="value">Poor</field><field name="answer_score">1</field></record>
+        <record id="survey_feedback_q10" model="survey.question">
+            <field name="survey_id" ref="survey_feedback"/>
+            <field name="sequence">10</field>
+            <field name="title">Willingness to Solve Problems</field>
+            <field name="question_type">simple_choice</field>
+            <field name="constr_mandatory" eval="True"/>
+        </record>
+        <record id="survey_feedback_q10_a4" model="survey.question.answer"><field name="question_id" ref="survey_feedback_q10"/><field name="sequence">1</field><field name="value">Excellent</field><field name="answer_score">4</field></record>
+        <record id="survey_feedback_q10_a3" model="survey.question.answer"><field name="question_id" ref="survey_feedback_q10"/><field name="sequence">2</field><field name="value">Good</field><field name="answer_score">3</field></record>
+        <record id="survey_feedback_q10_a2" model="survey.question.answer"><field name="question_id" ref="survey_feedback_q10"/><field name="sequence">3</field><field name="value">Fair</field><field name="answer_score">2</field></record>
+        <record id="survey_feedback_q10_a1" model="survey.question.answer"><field name="question_id" ref="survey_feedback_q10"/><field name="sequence">4</field><field name="value">Poor</field><field name="answer_score">1</field></record>
+        <record id="survey_feedback_q11" model="survey.question">
+            <field name="survey_id" ref="survey_feedback"/>
+            <field name="sequence">11</field>
+            <field name="title">Quality &amp; Process Support</field>
+            <field name="question_type">simple_choice</field>
+            <field name="constr_mandatory" eval="True"/>
+        </record>
+        <record id="survey_feedback_q11_a4" model="survey.question.answer"><field name="question_id" ref="survey_feedback_q11"/><field name="sequence">1</field><field name="value">Excellent</field><field name="answer_score">4</field></record>
+        <record id="survey_feedback_q11_a3" model="survey.question.answer"><field name="question_id" ref="survey_feedback_q11"/><field name="sequence">2</field><field name="value">Good</field><field name="answer_score">3</field></record>
+        <record id="survey_feedback_q11_a2" model="survey.question.answer"><field name="question_id" ref="survey_feedback_q11"/><field name="sequence">3</field><field name="value">Fair</field><field name="answer_score">2</field></record>
+        <record id="survey_feedback_q11_a1" model="survey.question.answer"><field name="question_id" ref="survey_feedback_q11"/><field name="sequence">4</field><field name="value">Poor</field><field name="answer_score">1</field></record>
+        <record id="survey_feedback_q12" model="survey.question"><field name="survey_id" ref="survey_feedback"/><field name="sequence">12</field><field name="title">Problems Faced</field><field name="question_type">text_box</field></record>
+        <record id="survey_feedback_q13" model="survey.question"><field name="survey_id" ref="survey_feedback"/><field name="sequence">13</field><field name="title">Suggestions</field><field name="question_type">text_box</field></record>
+    </data>
+</odoo>

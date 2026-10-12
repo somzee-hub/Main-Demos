@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Inquiry Booking + Inquiry Review on the CRM opportunity -->
+    <record id="crm_lead_form_gbb" model="ir.ui.view">
+        <field name="name">crm.lead.form.gbb</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_gbb_projects" type="object" class="oe_stat_button" icon="fa-pencil-square-o"
+                        invisible="gbb_project_count == 0">
+                    <field name="gbb_project_count" widget="statinfo" string="Design Projects"/>
+                </button>
+            </xpath>
+            <xpath expr="//sheet/notebook" position="before">
+                <group string="Inquiry (GBB/MKT/EB.01)" name="gbb_inquiry">
+                    <group>
+                        <field name="gbb_inquiry_ref" readonly="1"/>
+                        <field name="gbb_inquiry_date"/>
+                        <field name="gbb_fixture_type_id" options="{'no_open': True}"/>
+                        <field name="gbb_fixture_qty"/>
+                    </group>
+                    <group>
+                        <field name="gbb_component"/>
+                        <field name="gbb_component_material"/>
+                        <field name="gbb_machine_model"/>
+                        <field name="gbb_group" widget="radio" options="{'horizontal': true}"/>
+                    </group>
+                </group>
+            </xpath>
+            <xpath expr="//sheet/notebook" position="inside">
+                <page string="Inquiry Review (ER-02)" name="gbb_inquiry_review">
+                    <group>
+                        <group string="Feasibility">
+                            <field name="ir_tolerances" widget="radio" options="{'horizontal': true}"/>
+                            <field name="ir_stroke" widget="radio" options="{'horizontal': true}"/>
+                            <field name="ir_component_feasible" widget="radio" options="{'horizontal': true}"/>
+                            <field name="ir_feasible" widget="radio" options="{'horizontal': true}"/>
+                        </group>
+                        <group string="Component and Fixture">
+                            <field name="ir_fixture_type"/>
+                            <field name="ir_part_material"/>
+                            <field name="ir_input_condition"/>
+                            <field name="ir_setups"/>
+                            <field name="ir_hyd_elements"/>
+                            <field name="ir_reviewed_by"/>
+                            <field name="ir_review_date"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="crm_lead_list_gbb" model="ir.ui.view">
+        <field name="name">crm.lead.list.gbb</field>
+        <field name="model">crm.lead</field>
+        <field name="arch" type="xml">
+            <list string="Inquiry Register" default_order="gbb_inquiry_date desc, id desc">
+                <field name="gbb_inquiry_ref" string="Inquiry No"/>
+                <field name="gbb_inquiry_date"/>
+                <field name="partner_id" string="Customer"/>
+                <field name="gbb_fixture_type_id"/>
+                <field name="gbb_fixture_qty" sum="Qty"/>
+                <field name="gbb_component"/>
+                <field name="gbb_machine_model" optional="hide"/>
+                <field name="stage_id" string="Status"/>
+                <field name="ir_feasible" string="Review" optional="show"/>
+                <field name="user_id" string="Booked By" widget="many2one_avatar_user"/>
+                <field name="gbb_group" optional="show"/>
+                <field name="expected_revenue" sum="Value" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="crm_lead_search_gbb" model="ir.ui.view">
+        <field name="name">crm.lead.search.gbb</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.view_crm_case_opportunities_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <field name="gbb_inquiry_no"/>
+                <field name="gbb_component"/>
+                <filter name="gbb_review_pending" string="Review Pending" domain="[('ir_feasible', '=', False)]"/>
+                <filter name="gbb_g1" string="Group 1" domain="[('gbb_group', '=', 'G1')]"/>
+                <filter name="gbb_g2" string="Group 2" domain="[('gbb_group', '=', 'G2')]"/>
+                <filter name="gbb_by_fixture" string="Fixture Type" context="{'group_by': 'gbb_fixture_type_id'}"/>
+                <filter name="gbb_by_fy" string="Financial Year" context="{'group_by': 'gbb_fy'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_gbb_inquiry" model="ir.actions.act_window">
+        <field name="name">Inquiry Booking</field>
+        <field name="res_model">crm.lead</field>
+        <field name="view_mode">list,kanban,form,pivot,graph</field>
+        <field name="domain">[('type', '=', 'opportunity')]</field>
+        <field name="context">{'default_type': 'opportunity'}</field>
+        <field name="view_ids" eval="[(5, 0, 0), (0, 0, {'view_mode': 'list', 'view_id': ref('crm_lead_list_gbb')}), (0, 0, {'view_mode': 'kanban', 'view_id': ref('crm.crm_case_kanban_view_leads')})]"/>
+    </record>
+
+    <record id="action_gbb_inquiry_review" model="ir.actions.act_window">
+        <field name="name">Inquiry Review</field>
+        <field name="res_model">crm.lead</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('type', '=', 'opportunity')]</field>
+        <field name="context">{'search_default_gbb_review_pending': 1}</field>
+        <field name="view_ids" eval="[(5, 0, 0), (0, 0, {'view_mode': 'list', 'view_id': ref('crm_lead_list_gbb')})]"/>
+    </record>
+</odoo>

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="seq_gbb_inquiry" model="ir.sequence">
+            <field name="name">GBB Inquiry No (per FY)</field>
+            <field name="code">gbb.inquiry</field>
+            <field name="prefix">E-</field>
+            <field name="padding">0</field>
+            <field name="number_next">1</field>
+            <field name="use_date_range" eval="True"/>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="seq_gbb_inquiry_fy2023" model="ir.sequence.date_range">
+            <field name="sequence_id" ref="seq_gbb_inquiry"/>
+            <field name="date_from">2023-04-01</field>
+            <field name="date_to">2024-03-31</field>
+            <field name="number_next">1</field>
+        </record>
+        <record id="seq_gbb_inquiry_fy2024" model="ir.sequence.date_range">
+            <field name="sequence_id" ref="seq_gbb_inquiry"/>
+            <field name="date_from">2024-04-01</field>
+            <field name="date_to">2025-03-31</field>
+            <field name="number_next">1</field>
+        </record>
+        <record id="seq_gbb_inquiry_fy2025" model="ir.sequence.date_range">
+            <field name="sequence_id" ref="seq_gbb_inquiry"/>
+            <field name="date_from">2025-04-01</field>
+            <field name="date_to">2026-03-31</field>
+            <field name="number_next">1</field>
+        </record>
+        <record id="seq_gbb_inquiry_fy2026" model="ir.sequence.date_range">
+            <field name="sequence_id" ref="seq_gbb_inquiry"/>
+            <field name="date_from">2026-04-01</field>
+            <field name="date_to">2027-03-31</field>
+            <field name="number_next">1</field>
+        </record>
+        <record id="seq_gbb_inquiry_fy2027" model="ir.sequence.date_range">
+            <field name="sequence_id" ref="seq_gbb_inquiry"/>
+            <field name="date_from">2027-04-01</field>
+            <field name="date_to">2028-03-31</field>
+            <field name="number_next">1</field>
+        </record>
+        <record id="seq_gbb_inquiry_fy2028" model="ir.sequence.date_range">
+            <field name="sequence_id" ref="seq_gbb_inquiry"/>
+            <field name="date_from">2028-04-01</field>
+            <field name="date_to">2029-03-31</field>
+            <field name="number_next">1</field>
+        </record>
+        <record id="seq_gbb_inquiry_fy2029" model="ir.sequence.date_range">
+            <field name="sequence_id" ref="seq_gbb_inquiry"/>
+            <field name="date_from">2029-04-01</field>
+            <field name="date_to">2030-03-31</field>
+            <field name="number_next">1</field>
+        </record>
+        <record id="seq_gbb_project_code" model="ir.sequence">
+            <field name="name">GBB Project Code (per FY, from 3101)</field>
+            <field name="code">gbb.project.code</field>
+            <field name="prefix"></field>
+            <field name="padding">0</field>
+            <field name="number_next">3101</field>
+            <field name="use_date_range" eval="True"/>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="seq_gbb_project_code_fy2023" model="ir.sequence.date_range">
+            <field name="sequence_id" ref="seq_gbb_project_code"/>
+            <field name="date_from">2023-04-01</field>
+            <field name="date_to">2024-03-31</field>
+            <field name="number_next">3101</field>
+        </record>
+        <record id="seq_gbb_project_code_fy2024" model="ir.sequence.date_range">
+            <field name="sequence_id" ref="seq_gbb_project_code"/>
+            <field name="date_from">2024-04-01</field>
+            <field name="date_to">2025-03-31</field>
+            <field name="number_next">3101</field>
+        </record>
+        <record id="seq_gbb_project_code_fy2025" model="ir.sequence.date_range">
+            <field name="sequence_id" ref="seq_gbb_project_code"/>
+            <field name="date_from">2025-04-01</field>
+            <field name="date_to">2026-03-31</field>
+            <field name="number_next">3101</field>
+        </record>
+        <record id="seq_gbb_project_code_fy2026" model="ir.sequence.date_range">
+            <field name="sequence_id" ref="seq_gbb_project_code"/>
+            <field name="date_from">2026-04-01</field>
+            <field name="date_to">2027-03-31</field>
+            <field name="number_next">3101</field>
+        </record>
+        <record id="seq_gbb_project_code_fy2027" model="ir.sequence.date_range">
+            <field name="sequence_id" ref="seq_gbb_project_code"/>
+            <field name="date_from">2027-04-01</field>
+            <field name="date_to">2028-03-31</field>
+            <field name="number_next">3101</field>
+        </record>
+        <record id="seq_gbb_project_code_fy2028" model="ir.sequence.date_range">
+            <field name="sequence_id" ref="seq_gbb_project_code"/>
+            <field name="date_from">2028-04-01</field>
+            <field name="date_to">2029-03-31</field>
+            <field name="number_next">3101</field>
+        </record>
+        <record id="seq_gbb_project_code_fy2029" model="ir.sequence.date_range">
+            <field name="sequence_id" ref="seq_gbb_project_code"/>
+            <field name="date_from">2029-04-01</field>
+            <field name="date_to">2030-03-31</field>
+            <field name="number_next">3101</field>
+        </record>
+        <record id="seq_gbb_dcr" model="ir.sequence">
+            <field name="name">GBB Design Change Record</field>
+            <field name="code">gbb.design.change</field>
+            <field name="prefix">DCR/%(range_year)s/</field>
+            <field name="padding">3</field>
+            <field name="number_next">1</field>
+            <field name="use_date_range" eval="False"/>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="seq_gbb_checklist" model="ir.sequence">
+            <field name="name">GBB Checklist</field>
+            <field name="code">gbb.checklist</field>
+            <field name="prefix">CHK/%(range_year)s/</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+            <field name="use_date_range" eval="False"/>
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
+</odoo>

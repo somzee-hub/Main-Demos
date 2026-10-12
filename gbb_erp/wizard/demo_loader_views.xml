@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="gbb_demo_loader_form" model="ir.ui.view">
+        <field name="name">gbb.demo.loader.form</field>
+        <field name="model">gbb.demo.loader</field>
+        <field name="arch" type="xml">
+            <form string="GBB Demo Data">
+                <field name="is_loaded" invisible="1"/>
+                <div class="alert alert-info" role="alert" invisible="is_loaded">
+                    <p><b>Load GBB demo data</b>: customers, inquiries E-225 onwards, quotations with cost breakup,
+                    orders with project codes, design projects with checklists and timesheets, fixture BOMs with
+                    part routes and RM sizing, manufacturing and purchase orders, a BOM revision with its Design
+                    Change Record, dispatch with invoice, quality, maintenance, complaints, feedback and HR records.</p>
+                    <p>Demo users log in as <code>girish@gbb.demo</code>, <code>arun@gbb.demo</code>,
+                    <code>sandip@gbb.demo</code>, <code>stores@gbb.demo</code>, <code>planning@gbb.demo</code> and others,
+                    password <code>gbb@demo</code>.</p>
+                </div>
+                <div class="alert alert-warning" role="alert" invisible="not is_loaded">
+                    <p><b>Remove GBB demo data</b> deletes every row the load created, including the documents Odoo
+                    generated from it, and restores the company details and numbering. Your own configuration and
+                    records are not touched.</p>
+                </div>
+                <group>
+                    <field name="summary" nolabel="1" readonly="1"/>
+                </group>
+                <group invisible="not log">
+                    <field name="log" nolabel="1"/>
+                </group>
+                <footer>
+                    <button name="action_load" type="object" string="Load Demo Data" class="btn-primary"
+                            invisible="is_loaded"/>
+                    <button name="action_unload" type="object" string="Remove Demo Data" class="btn-danger"
+                            invisible="not is_loaded" confirm="Remove all GBB demo data from this database?"/>
+                    <button string="Close" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_gbb_demo_loader" model="ir.actions.act_window">
+        <field name="name">GBB Demo Data</field>
+        <field name="res_model">gbb.demo.loader</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Fixture BOM: GBB columns, revisions, send to purchase -->
+    <record id="mrp_bom_form_gbb" model="ir.ui.view">
+        <field name="name">mrp.bom.form.gbb</field>
+        <field name="model">mrp.bom</field>
+        <field name="inherit_id" ref="mrp.mrp_bom_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/sheet" position="before">
+                <header>
+                    <button name="action_gbb_send_to_purchase" type="object" string="Send BOM to Purchase"
+                            class="btn-primary" invisible="gbb_sent_to_purchase or not active"/>
+                    <button name="action_gbb_generate_part_boms" type="object" string="Generate Part BOMs &amp; Routes"
+                            invisible="not active"/>
+                    <button name="action_gbb_new_revision" type="object" string="New Revision (Design Change)"
+                            invisible="not active"/>
+                    <button name="action_gbb_release_revision" type="object" string="Release This Revision"
+                            class="btn-primary" invisible="not gbb_previous_bom_id or gbb_rev_released"
+                            confirm="Archive the previous revision and record the BOM impact on the Design Change Record?"/>
+                </header>
+            </xpath>
+            <xpath expr="//field[@name='product_tmpl_id']" position="before">
+                <field name="project_id" string="Project Code"/>
+            </xpath>
+            <xpath expr="//field[@name='product_tmpl_id']" position="after">
+                <field name="gbb_rev"/>
+                <field name="gbb_previous_bom_id" invisible="not gbb_previous_bom_id"/>
+                <field name="gbb_rev_released" invisible="1"/>
+                <field name="gbb_fixture_qty" invisible="not project_id"/>
+                <field name="gbb_sent_to_purchase" invisible="not gbb_sent_to_purchase"/>
+                <field name="gbb_rm_pending" invisible="not project_id"/>
+            </xpath>
+            <xpath expr="//field[@name='bom_line_ids']/list/field[@name='product_qty']" position="after">
+                <field name="gbb_spare" optional="hide"/>
+                <field name="gbb_grade_id" optional="show"/>
+                <field name="gbb_is_std" optional="show"/>
+                <field name="gbb_critical" optional="hide"/>
+                <field name="gbb_shape" optional="show"/>
+                <field name="gbb_fin_d" optional="hide"/>
+                <field name="gbb_fin_l" optional="hide"/>
+                <field name="gbb_fin_w" optional="hide"/>
+                <field name="gbb_fin_h" optional="hide"/>
+                <field name="gbb_rm_size" optional="show"/>
+                <field name="gbb_rm_weight" optional="show" sum="RM kg"/>
+                <field name="gbb_rm_available" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="mrp_bom_list_gbb" model="ir.ui.view">
+        <field name="name">mrp.bom.list.gbb</field>
+        <field name="model">mrp.bom</field>
+        <field name="arch" type="xml">
+            <list string="Fixture BOMs">
+                <field name="project_id" string="Project Code"/>
+                <field name="product_tmpl_id" string="Fixture"/>
+                <field name="gbb_rev"/>
+                <field name="gbb_fixture_qty"/>
+                <field name="gbb_designer_id" widget="many2one_avatar_user"/>
+                <field name="gbb_sent_to_purchase" string="To Purchase"/>
+                <field name="gbb_rm_pending" string="RM Pending"/>
+                <field name="gbb_group" optional="show"/>
+                <field name="active" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_gbb_fixture_boms" model="ir.actions.act_window">
+        <field name="name">BOM</field>
+        <field name="res_model">mrp.bom</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('project_id', '!=', False)]</field>
+        <field name="view_ids" eval="[(5, 0, 0), (0, 0, {'view_mode': 'list', 'view_id': ref('mrp_bom_list_gbb')})]"/>
+    </record>
+
+    <record id="action_gbb_bom_inbox" model="ir.actions.act_window">
+        <field name="name">BOM Inbox</field>
+        <field name="res_model">mrp.bom</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('gbb_sent_to_purchase', '!=', False)]</field>
+        <field name="view_ids" eval="[(5, 0, 0), (0, 0, {'view_mode': 'list', 'view_id': ref('mrp_bom_list_gbb')})]"/>
+    </record>
+
+    <record id="mrp_workcenter_form_gbb" model="ir.ui.view">
+        <field name="name">mrp.workcenter.form.gbb</field>
+        <field name="model">mrp.workcenter</field>
+        <field name="inherit_id" ref="mrp.mrp_workcenter_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="(//field[@name='code'])[1]" position="after">
+                <field name="gbb_machine_type"/>
+                <field name="gbb_group"/>
+                <field name="gbb_shift"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Job Rejection register on scrap -->
+    <record id="stock_scrap_form_gbb" model="ir.ui.view">
+        <field name="name">stock.scrap.form.gbb</field>
+        <field name="model">stock.scrap</field>
+        <field name="inherit_id" ref="stock.stock_scrap_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='scrap_reason_tag_ids']" position="after">
+                <field name="gbb_project_id"/>
+                <field name="gbb_workcenter_id"/>
+                <field name="gbb_operator_id"/>
+                <field name="gbb_shift"/>
+                <field name="gbb_reworkable"/>
+                <field name="gbb_amount"/>
+            </xpath>
+            <xpath expr="//sheet" position="inside">
+                <group string="Root Cause and Action (GBB/QA/02)">
+                    <field name="gbb_root_cause"/>
+                    <field name="gbb_corrective_action"/>
+                    <field name="gbb_action_status" widget="radio" options="{'horizontal': true}"/>
+                    <field name="gbb_responsible_id"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="stock_scrap_list_gbb" model="ir.ui.view">
+        <field name="name">stock.scrap.list.gbb</field>
+        <field name="model">stock.scrap</field>
+        <field name="arch" type="xml">
+            <list string="Job Rejections">
+                <field name="date_done" string="Date"/>
+                <field name="product_id" string="Part"/>
+                <field name="gbb_project_id"/>
+                <field name="gbb_workcenter_id"/>
+                <field name="gbb_operator_id"/>
+                <field name="scrap_qty" sum="Qty"/>
+                <field name="scrap_reason_tag_ids" widget="many2many_tags"/>
+                <field name="gbb_reworkable"/>
+                <field name="gbb_action_status" widget="badge"/>
+                <field name="gbb_amount" sum="Amount"/>
+                <field name="state" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_gbb_job_rejection" model="ir.actions.act_window">
+        <field name="name">Job Rejection</field>
+        <field name="res_model">stock.scrap</field>
+        <field name="view_mode">list,form,pivot,graph</field>
+        <field name="view_ids" eval="[(5, 0, 0), (0, 0, {'view_mode': 'list', 'view_id': ref('stock_scrap_list_gbb')})]"/>
+    </record>
+
+    <!-- Design Change Records -->
+    <record id="gbb_design_change_form" model="ir.ui.view">
+        <field name="name">gbb.design.change.form</field>
+        <field name="model">gbb.design.change</field>
+        <field name="arch" type="xml">
+            <form string="Design Change Record">
+                <header>
+                    <button name="action_approve" type="object" string="Approve" class="btn-primary" invisible="state != 'draft'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_pos" type="object" class="oe_stat_button" icon="fa-shopping-cart">
+                            <field name="impacted_po_count" widget="statinfo" string="Impacted POs"/>
+                        </button>
+                        <button name="action_view_mos" type="object" class="oe_stat_button" icon="fa-wrench">
+                            <field name="impacted_mo_count" widget="statinfo" string="Open MOs"/>
+                        </button>
+                    </div>
+                    <div class="oe_title"><h1><field name="name" readonly="1"/></h1></div>
+                    <group>
+                        <group>
+                            <field name="project_id"/>
+                            <field name="partner_id"/>
+                            <field name="date"/>
+                            <field name="reason"/>
+                        </group>
+                        <group>
+                            <field name="bom_old_id"/>
+                            <field name="bom_new_id"/>
+                            <field name="approved_by_id"/>
+                            <field name="gbb_group"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="change_details"/>
+                    </group>
+                    <separator string="BOM Impact (old rev vs new rev)"/>
+                    <field name="line_ids" readonly="1">
+                        <list decoration-success="change_type == 'added'" decoration-danger="change_type == 'removed'" decoration-warning="change_type == 'spec'">
+                            <field name="product_id"/>
+                            <field name="change_type"/>
+                            <field name="detail"/>
+                            <field name="old_qty"/>
+                            <field name="new_qty"/>
+                            <field name="delta"/>
+                            <field name="po_qty"/>
+                            <field name="mo_qty"/>
+                            <field name="action_hint"/>
+                        </list>
+                    </field>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="gbb_design_change_list" model="ir.ui.view">
+        <field name="name">gbb.design.change.list</field>
+        <field name="model">gbb.design.change</field>
+        <field name="arch" type="xml">
+            <list string="Design Change Records">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="project_id"/>
+                <field name="partner_id"/>
+                <field name="change_details"/>
+                <field name="bom_new_id"/>
+                <field name="approved_by_id"/>
+                <field name="state" widget="badge"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_gbb_design_change" model="ir.actions.act_window">
+        <field name="name">Design Change Records</field>
+        <field name="res_model">gbb.design.change</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="gbb_bom_revision_wizard_form" model="ir.ui.view">
+        <field name="name">gbb.bom.revision.wizard.form</field>
+        <field name="model">gbb.bom.revision.wizard</field>
+        <field name="arch" type="xml">
+            <form string="New BOM Revision">
+                <p>A copy of this BOM is created as the next revision and a Design Change Record is opened.
+                   Edit the new revision, then press <b>Release This Revision</b>: the old revision is archived
+                   and the DCR shows every part added, removed or changed, with the purchase action needed.</p>
+                <group>
+                    <field name="bom_id" readonly="1"/>
+                    <field name="reason"/>
+                    <field name="change_details"/>
+                </group>
+                <footer>
+                    <button name="action_create_revision" type="object" string="Create Revision" class="btn-primary"/>
+                    <button string="Cancel" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="gbb_lesson_list" model="ir.ui.view">
+        <field name="name">gbb.lesson.learnt.list</field>
+        <field name="model">gbb.lesson.learnt</field>
+        <field name="arch" type="xml">
+            <list string="Lessons Learnt" editable="top">
+                <field name="date"/>
+                <field name="project_id"/>
+                <field name="partner_id"/>
+                <field name="category"/>
+                <field name="name"/>
+                <field name="user_id" widget="many2one_avatar_user"/>
+                <field name="gbb_group" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_gbb_lessons" model="ir.actions.act_window">
+        <field name="name">Lessons Learnt</field>
+        <field name="res_model">gbb.lesson.learnt</field>
+        <field name="view_mode">list</field>
+    </record>
+</odoo>

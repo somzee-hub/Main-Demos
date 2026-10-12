@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sale_order_form_gbb" model="ir.ui.view">
+        <field name="name">sale.order.form.gbb</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_gbb_submit" type="object" string="Submit to Director" class="btn-primary"
+                        invisible="state not in ('draft', 'sent') or gbb_approval_state in ('to_approve', 'approved')"/>
+                <button name="action_gbb_approve" type="object" string="Approve" class="btn-primary"
+                        groups="gbb_erp.group_gbb_director" invisible="gbb_approval_state != 'to_approve'"/>
+                <button name="action_gbb_reject" type="object" string="Reject"
+                        groups="gbb_erp.group_gbb_director" invisible="gbb_approval_state != 'to_approve'"/>
+                <button name="action_gbb_new_revision" type="object" string="New Revision"
+                        invisible="state not in ('draft', 'sent')"/>
+                <button name="action_gbb_apply_breakups" type="object" string="Apply Cost Breakups"
+                        invisible="state not in ('draft', 'sent')"/>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_gbb_view_projects" type="object" class="oe_stat_button" icon="fa-pencil-square-o"
+                        invisible="not gbb_project_ids">
+                    <span class="o_stat_text">Design Projects</span>
+                </button>
+            </xpath>
+            <xpath expr="//sheet/div[hasclass('oe_title')]" position="after">
+                <div class="mb-2">
+                    <field name="gbb_approval_state" widget="badge" readonly="1"
+                           decoration-success="gbb_approval_state == 'approved'"
+                           decoration-warning="gbb_approval_state == 'to_approve'"
+                           decoration-danger="gbb_approval_state == 'rejected'"/>
+                    <span invisible="state != 'sale'" class="ms-2">
+                        <field name="gbb_order_status" widget="badge" readonly="1"
+                               decoration-info="gbb_order_status == 'design'"
+                               decoration-warning="gbb_order_status in ('mfg', 'hold')"
+                               decoration-success="gbb_order_status == 'dispatched'"/>
+                    </span>
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='payment_term_id']" position="after">
+                <field name="gbb_inquiry_no" readonly="1"/>
+                <field name="gbb_rev" readonly="1"/>
+                <field name="gbb_group"/>
+                <field name="gbb_machine"/>
+                <field name="gbb_delivery_weeks"/>
+                <field name="gbb_machining_factor"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/list/field[@name='price_unit']" position="after">
+                <button name="action_gbb_open_breakup" type="object" icon="fa-calculator" title="Cost Breakup"/>
+                <field name="gbb_project_id" optional="show" readonly="1"/>
+            </xpath>
+            <xpath expr="//sheet/notebook" position="inside">
+                <page string="Scope &amp; Terms" name="gbb_scope_terms">
+                    <group>
+                        <field name="gbb_scope"/>
+                        <field name="gbb_terms"/>
+                    </group>
+                </page>
+                <page string="Order Booking (OB-04)" name="gbb_order_booking">
+                    <group>
+                        <group>
+                            <field name="client_order_ref" string="Customer PO / LOI No"/>
+                            <field name="gbb_allotted_date"/>
+                            <field name="commitment_date" string="Expected Dispatch"/>
+                            <field name="gbb_days_left"/>
+                        </group>
+                        <group>
+                            <field name="gbb_market" widget="radio" options="{'horizontal': true}"/>
+                            <field name="gbb_on_hold"/>
+                            <field name="gbb_approved_by"/>
+                            <field name="gbb_approved_on"/>
+                        </group>
+                    </group>
+                </page>
+                <page string="Order Review (OB-5)" name="gbb_order_review">
+                    <group>
+                        <group string="Feasibility">
+                            <field name="or_tol_ok"/>
+                            <field name="or_stroke_ok"/>
+                            <field name="or_machining_ok"/>
+                            <field name="or_envelope_ok"/>
+                        </group>
+                        <group string="Review">
+                            <field name="or_payment_terms"/>
+                            <field name="or_delivery"/>
+                            <field name="or_man_material"/>
+                            <field name="or_cutting_trial"/>
+                            <field name="or_bo_lead_time"/>
+                            <field name="or_outsourcing"/>
+                            <field name="or_as_expected"/>
+                            <field name="or_points_done"/>
+                        </group>
+                    </group>
+                    <field name="or_point_ids">
+                        <list editable="bottom">
+                            <field name="sequence" widget="handle"/>
+                            <field name="name"/>
+                            <field name="done"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Cost breakup dialog (confidential) -->
+    <record id="view_sale_line_breakup_form" model="ir.ui.view">
+        <field name="name">sale.order.line.breakup.form</field>
+        <field name="model">sale.order.line</field>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <form string="Cost Breakup (Confidential)">
+                <header>
+                    <button name="action_gbb_load_default_breakup" type="object" string="Load GBB Default Breakup"
+                            confirm="This replaces the current breakup rows. Continue?"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" readonly="1"/>
+                            <field name="product_uom_qty" readonly="1" string="Qty"/>
+                        </group>
+                        <group>
+                            <field name="gbb_profit_pct"/>
+                            <field name="gbb_risk"/>
+                        </group>
+                    </group>
+                    <field name="gbb_breakup_ids">
+                        <list editable="bottom">
+                            <field name="sequence" widget="handle"/>
+                            <field name="name"/>
+                            <field name="kind"/>
+                            <field name="product_id" optional="show"/>
+                            <field name="qty"/>
+                            <field name="rate"/>
+                            <field name="amount_manual" string="Amount (direct)"/>
+                            <field name="amount" sum="Sub Total-1"/>
+                        </list>
+                    </field>
+                    <group class="oe_subtotal_footer">
+                        <field name="gbb_subtotal1"/>
+                        <field name="gbb_profit"/>
+                        <field name="gbb_risk" readonly="1"/>
+                        <field name="gbb_breakup_total" class="oe_subtotal_footer_separator"/>
+                        <field name="price_unit" readonly="1" string="Unit Price on Quote"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="Save" special="save" class="btn-primary"/>
+                    <button string="Close" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="sale_order_list_gbb" model="ir.ui.view">
+        <field name="name">sale.order.list.gbb</field>
+        <field name="model">sale.order</field>
+        <field name="arch" type="xml">
+            <list string="Order Book" decoration-danger="gbb_days_left &lt; 0" decoration-muted="gbb_order_status == 'dispatched'">
+                <field name="gbb_inquiry_no" string="Inquiry No"/>
+                <field name="name" string="Order"/>
+                <field name="client_order_ref" string="PO / LOI"/>
+                <field name="partner_id"/>
+                <field name="date_order" string="Order Date" widget="date"/>
+                <field name="commitment_date" string="Expected Dispatch" widget="date"/>
+                <field name="gbb_days_left" string="Days Left"/>
+                <field name="gbb_order_status" widget="badge"/>
+                <field name="gbb_market" optional="hide"/>
+                <field name="gbb_group" optional="show"/>
+                <field name="amount_untaxed" sum="Value" string="Value (excl. GST)"/>
+                <field name="amount_total" sum="Total" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="sale_quote_list_gbb" model="ir.ui.view">
+        <field name="name">sale.order.quote.list.gbb</field>
+        <field name="model">sale.order</field>
+        <field name="arch" type="xml">
+            <list string="Quotation Register">
+                <field name="name"/>
+                <field name="gbb_rev"/>
+                <field name="gbb_inquiry_no"/>
+                <field name="partner_id"/>
+                <field name="date_order" widget="date"/>
+                <field name="gbb_approval_state" widget="badge"/>
+                <field name="state" widget="badge"/>
+                <field name="gbb_group" optional="show"/>
+                <field name="amount_untaxed" sum="Quoted"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_gbb_quotations" model="ir.actions.act_window">
+        <field name="name">Quotations</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">list,form,pivot,graph</field>
+        <field name="domain">[('state', 'in', ('draft', 'sent', 'cancel'))]</field>
+        <field name="view_ids" eval="[(5, 0, 0), (0, 0, {'view_mode': 'list', 'view_id': ref('sale_quote_list_gbb')})]"/>
+    </record>
+
+    <record id="action_gbb_orders" model="ir.actions.act_window">
+        <field name="name">Order Booking</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">list,form,pivot,graph</field>
+        <field name="domain">[('state', '=', 'sale')]</field>
+        <field name="view_ids" eval="[(5, 0, 0), (0, 0, {'view_mode': 'list', 'view_id': ref('sale_order_list_gbb')})]"/>
+    </record>
+
+    <record id="action_gbb_order_review" model="ir.actions.act_window">
+        <field name="name">Order Review</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('state', '=', 'sale')]</field>
+        <field name="view_ids" eval="[(5, 0, 0), (0, 0, {'view_mode': 'list', 'view_id': ref('sale_order_list_gbb')})]"/>
+    </record>
+</odoo>

@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="purchase_order_form_gbb" model="ir.ui.view">
+        <field name="name">purchase.order.form.gbb</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="(//field[@name='partner_ref'])[1]" position="after">
+                <field name="gbb_po_type" widget="radio" options="{'horizontal': true}"/>
+                <field name="gbb_process" invisible="gbb_po_type != 'JOBWORK'"/>
+                <field name="gbb_jw_status" invisible="gbb_po_type != 'JOBWORK'"/>
+                <field name="project_id" string="Project Code"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="purchase_order_list_gbb" model="ir.ui.view">
+        <field name="name">purchase.order.list.gbb</field>
+        <field name="model">purchase.order</field>
+        <field name="arch" type="xml">
+            <list string="Purchase Orders" decoration-danger="gbb_jw_overdue">
+                <field name="name"/>
+                <field name="gbb_po_type" widget="badge"/>
+                <field name="date_order" widget="date"/>
+                <field name="partner_id"/>
+                <field name="project_id" string="Project Code"/>
+                <field name="gbb_process" optional="show"/>
+                <field name="date_planned" widget="date" string="Expected"/>
+                <field name="gbb_jw_status" optional="show"/>
+                <field name="gbb_jw_overdue" column_invisible="1"/>
+                <field name="receipt_status" widget="badge" optional="show"/>
+                <field name="amount_untaxed" sum="Untaxed"/>
+                <field name="amount_total" sum="Total" optional="show"/>
+                <field name="state" widget="badge"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_gbb_purchase_orders" model="ir.actions.act_window">
+        <field name="name">Purchase Orders</field>
+        <field name="res_model">purchase.order</field>
+        <field name="view_mode">list,form,pivot,graph</field>
+        <field name="view_ids" eval="[(5, 0, 0), (0, 0, {'view_mode': 'list', 'view_id': ref('purchase_order_list_gbb')})]"/>
+    </record>
+
+    <record id="action_gbb_jobwork" model="ir.actions.act_window">
+        <field name="name">Outsourced Process Status</field>
+        <field name="res_model">purchase.order</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('gbb_po_type', '=', 'JOBWORK')]</field>
+        <field name="context">{'default_gbb_po_type': 'JOBWORK'}</field>
+        <field name="view_ids" eval="[(5, 0, 0), (0, 0, {'view_mode': 'list', 'view_id': ref('purchase_order_list_gbb')})]"/>
+    </record>
+
+    <record id="stock_picking_form_gbb" model="ir.ui.view">
+        <field name="name">stock.picking.form.gbb</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet/notebook" position="inside">
+                <page string="Dispatch / Challan" name="gbb_dispatch" invisible="picking_type_code == 'incoming'">
+                    <group>
+                        <group string="Transport">
+                            <field name="gbb_customer_po"/>
+                            <field name="gbb_transporter_id"/>
+                            <field name="gbb_vehicle_no"/>
+                            <field name="gbb_lr_no"/>
+                            <field name="gbb_eway_bill"/>
+                        </group>
+                        <group string="Returnable / Requisition">
+                            <field name="gbb_returnable"/>
+                            <field name="gbb_expected_return" invisible="not gbb_returnable"/>
+                            <field name="gbb_requested_by_id"/>
+                            <field name="gbb_department_id"/>
+                            <field name="project_id" string="Project Code"/>
+                        </group>
+                    </group>
+                    <field name="gbb_checklist_ids" context="{'default_picking_id': id, 'default_template_id': %(gbb_erp.tmpl_packaging)d}">
+                        <list>
+                            <field name="name"/>
+                            <field name="template_id"/>
+                            <field name="date"/>
+                            <field name="progress" widget="progressbar"/>
+                            <field name="state" widget="badge"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_gbb_dispatch" model="ir.actions.act_window">
+        <field name="name">Dispatch / Challan</field>
+        <field name="res_model">stock.picking</field>
+        <field name="view_mode">list,form,calendar</field>
+        <field name="domain">[('picking_type_code', '=', 'outgoing')]</field>
+        <field name="context">{'restricted_picking_type_code': 'outgoing'}</field>
+    </record>
+
+    <record id="action_gbb_daily_dispatch" model="ir.actions.act_window">
+        <field name="name">Daily Dispatch Plan</field>
+        <field name="res_model">stock.picking</field>
+        <field name="view_mode">calendar,list,form</field>
+        <field name="domain">[('picking_type_code', '=', 'outgoing'), ('state', 'not in', ('done', 'cancel'))]</field>
+    </record>
+
+    <record id="action_gbb_grn" model="ir.actions.act_window">
+        <field name="name">Goods Receipt (GRN)</field>
+        <field name="res_model">stock.picking</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('picking_type_code', '=', 'incoming')]</field>
+        <field name="context">{'restricted_picking_type_code': 'incoming'}</field>
+    </record>
+
+    <record id="action_gbb_material_requisition" model="ir.actions.act_window">
+        <field name="name">Material Requisition / Issue</field>
+        <field name="res_model">stock.picking</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain" eval="[('picking_type_id', '=', ref('gbb_erp.picking_type_mr'))]"/>
+        <field name="context" eval="{'default_picking_type_id': ref('gbb_erp.picking_type_mr')}"/>
+    </record>
+
+    <record id="action_gbb_returnable" model="ir.actions.act_window">
+        <field name="name">Returnable Challan</field>
+        <field name="res_model">stock.picking</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain" eval="[('picking_type_id', '=', ref('gbb_erp.picking_type_returnable'))]"/>
+        <field name="context" eval="{'default_picking_type_id': ref('gbb_erp.picking_type_returnable'), 'default_gbb_returnable': True}"/>
+    </record>
+
+    <record id="maintenance_equipment_form_gbb" model="ir.ui.view">
+        <field name="name">maintenance.equipment.form.gbb</field>
+        <field name="model">maintenance.equipment</field>
+        <field name="inherit_id" ref="maintenance.hr_equipment_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet/notebook" position="inside">
+                <page string="Calibration &amp; Acceptance" name="gbb_calibration" invisible="not gbb_is_instrument">
+                    <group>
+                        <group string="Instrument (GBB/QA/05)">
+                            <field name="gbb_spec"/>
+                            <field name="gbb_least_count"/>
+                            <field name="gbb_cal_frequency"/>
+                            <field name="gbb_cal_date"/>
+                            <field name="gbb_cal_due"/>
+                            <field name="gbb_cal_status" widget="badge"/>
+                        </group>
+                        <group string="Acceptance Criteria (GBB/QA/04)">
+                            <field name="gbb_error_acceptable"/>
+                            <field name="gbb_actual_error"/>
+                            <field name="gbb_acceptance" widget="badge"/>
+                        </group>
+                    </group>
+                </page>
+                <page string="Machine / JH" name="gbb_machine" invisible="gbb_is_instrument">
+                    <group>
+                        <field name="gbb_workcenter_id"/>
+                    </group>
+                    <field name="gbb_jh_ids" context="{'default_equipment_id': id, 'default_template_id': %(gbb_erp.tmpl_jh_daily)d}">
+                        <list>
+                            <field name="date"/>
+                            <field name="name"/>
+                            <field name="prepared_by_id" string="Operator"/>
+                            <field name="progress" widget="progressbar"/>
+                            <field name="state" widget="badge"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+            <xpath expr="//sheet/notebook" position="before">
+                <field name="gbb_is_instrument"/>
+                <label for="gbb_is_instrument" string="Measuring instrument (calibration)"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="maintenance_instrument_list_gbb" model="ir.ui.view">
+        <field name="name">maintenance.equipment.instrument.list</field>
+        <field name="model">maintenance.equipment</field>
+        <field name="arch" type="xml">
+            <list string="Instruments" decoration-danger="gbb_cal_status == 'due'">
+                <field name="name" string="Gauge Name"/>
+                <field name="gbb_spec"/>
+                <field name="serial_no" string="Gauge No."/>
+                <field name="partner_id" string="Manufacturer"/>
+                <field name="gbb_least_count"/>
+                <field name="gbb_cal_frequency"/>
+                <field name="gbb_cal_date"/>
+                <field name="gbb_cal_due"/>
+                <field name="gbb_cal_status" widget="badge"/>
+                <field name="gbb_error_acceptable" optional="show"/>
+                <field name="gbb_actual_error" optional="show"/>
+                <field name="gbb_acceptance" widget="badge" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_gbb_instruments" model="ir.actions.act_window">
+        <field name="name">Instruments &amp; Calibration</field>
+        <field name="res_model">maintenance.equipment</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('gbb_is_instrument', '=', True)]</field>
+        <field name="context">{'default_gbb_is_instrument': True}</field>
+        <field name="view_ids" eval="[(5, 0, 0), (0, 0, {'view_mode': 'list', 'view_id': ref('maintenance_instrument_list_gbb')})]"/>
+    </record>
+
+    <record id="action_gbb_machines" model="ir.actions.act_window">
+        <field name="name">Machines</field>
+        <field name="res_model">maintenance.equipment</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="domain">[('gbb_is_instrument', '=', False)]</field>
+    </record>
+</odoo>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_gbb_operator_console" model="ir.actions.server">
+        <field name="name">Operator Console</field>
+        <field name="model_id" ref="mrp.model_mrp_workorder"/>
+        <field name="state">code</field>
+        <field name="code">
+installed = env['ir.module.module'].sudo().search_count([('name', '=', 'mrp_workorder'), ('state', '=', 'installed')])
+action = env['ir.actions.actions']._for_xml_id('mrp.action_mrp_display' if installed else 'mrp.mrp_workorder_todo')
+        </field>
+    </record>
+    <menuitem id="menu_gbb_root" name="GBB ERP" sequence="1" web_icon="gbb_erp,static/description/icon.png"/>
+    <menuitem id="menu_gbb_s1" name="Sales" parent="menu_gbb_root" sequence="10"/>
+    <menuitem id="menu_gbb_s1_1" name="Inquiry Booking" parent="menu_gbb_s1" action="action_gbb_inquiry" sequence="10"/>
+    <menuitem id="menu_gbb_s1_2" name="Inquiry Review" parent="menu_gbb_s1" action="action_gbb_inquiry_review" sequence="20"/>
+    <menuitem id="menu_gbb_s1_3" name="Quotation" parent="menu_gbb_s1" action="action_gbb_quotations" sequence="30"/>
+    <menuitem id="menu_gbb_s1_4" name="Order Booking" parent="menu_gbb_s1" action="action_gbb_orders" sequence="40"/>
+    <menuitem id="menu_gbb_s1_5" name="Order Review" parent="menu_gbb_s1" action="action_gbb_order_review" sequence="50"/>
+    <menuitem id="menu_gbb_s1_6" name="Customer Feedback" parent="menu_gbb_s1" action="survey.action_survey_user_input" sequence="60"/>
+    <menuitem id="menu_gbb_s1_7" name="Feedback Form" parent="menu_gbb_s1" action="survey.action_survey_form" sequence="70"/>
+    <menuitem id="menu_gbb_s1_8" name="Customer Complaints" parent="menu_gbb_s1" action="action_gbb_complaints" sequence="80"/>
+    <menuitem id="menu_gbb_s2" name="Design &amp; Engineering" parent="menu_gbb_root" sequence="20"/>
+    <menuitem id="menu_gbb_s2_1" name="Design Projects" parent="menu_gbb_s2" action="action_gbb_design_projects" sequence="10"/>
+    <menuitem id="menu_gbb_s2_2" name="Designer Board" parent="menu_gbb_s2" action="action_gbb_design_board" sequence="20"/>
+    <menuitem id="menu_gbb_s2_3" name="Design Planner (activities)" parent="menu_gbb_s2" action="action_gbb_design_planner" sequence="30"/>
+    <menuitem id="menu_gbb_s2_4" name="Layout (Standard Items)" parent="menu_gbb_s2" action="action_gbb_std_items" sequence="40"/>
+    <menuitem id="menu_gbb_s2_5" name="Design Check List" parent="menu_gbb_s2" action="action_gbb_chk_fixture" sequence="50"/>
+    <menuitem id="menu_gbb_s2_6" name="Cradle Check List" parent="menu_gbb_s2" action="action_gbb_chk_cradle" sequence="60"/>
+    <menuitem id="menu_gbb_s2_7" name="Daily Work Sheet" parent="menu_gbb_s2" action="action_gbb_daily_work" sequence="70"/>
+    <menuitem id="menu_gbb_s2_8" name="Operation Sheet" parent="menu_gbb_s2" action="mrp.mrp_routing_action" sequence="80"/>
+    <menuitem id="menu_gbb_s2_9" name="BOM" parent="menu_gbb_s2" action="action_gbb_fixture_boms" sequence="90"/>
+    <menuitem id="menu_gbb_s2_10" name="Internal Review" parent="menu_gbb_s2" action="action_gbb_chk_review" sequence="100"/>
+    <menuitem id="menu_gbb_s2_11" name="Packaging List" parent="menu_gbb_s2" action="action_gbb_chk_packaging" sequence="110"/>
+    <menuitem id="menu_gbb_s2_12" name="Design Change Records" parent="menu_gbb_s2" action="action_gbb_design_change" sequence="120"/>
+    <menuitem id="menu_gbb_s2_13" name="Lessons Learnt" parent="menu_gbb_s2" action="action_gbb_lessons" sequence="130"/>
+    <menuitem id="menu_gbb_s3" name="Purchase &amp; Stores" parent="menu_gbb_root" sequence="30"/>
+    <menuitem id="menu_gbb_s3_1" name="BOM Inbox" parent="menu_gbb_s3" action="action_gbb_bom_inbox" sequence="10"/>
+    <menuitem id="menu_gbb_s3_2" name="Purchase Orders" parent="menu_gbb_s3" action="action_gbb_purchase_orders" sequence="20"/>
+    <menuitem id="menu_gbb_s3_3" name="Goods Receipt (GRN)" parent="menu_gbb_s3" action="action_gbb_grn" sequence="30"/>
+    <menuitem id="menu_gbb_s3_4" name="Dispatch / Challan" parent="menu_gbb_s3" action="action_gbb_dispatch" sequence="40"/>
+    <menuitem id="menu_gbb_s3_5" name="Daily Dispatch Plan" parent="menu_gbb_s3" action="action_gbb_daily_dispatch" sequence="50"/>
+    <menuitem id="menu_gbb_s3_6" name="Returnable Challan" parent="menu_gbb_s3" action="action_gbb_returnable" sequence="60"/>
+    <menuitem id="menu_gbb_s3_7" name="Vendors" parent="menu_gbb_s3" action="action_gbb_vendors" sequence="70"/>
+    <menuitem id="menu_gbb_s3_8" name="Vendor Assessment" parent="menu_gbb_s3" action="action_gbb_chk_vendor" sequence="80"/>
+    <menuitem id="menu_gbb_s3_9" name="Stock Items" parent="menu_gbb_s3" action="action_gbb_stock_items" sequence="90"/>
+    <menuitem id="menu_gbb_s3_10" name="Stock on Hand" parent="menu_gbb_s3" action="stock.action_view_quants" sequence="100" groups="stock.group_stock_user"/>
+    <menuitem id="menu_gbb_s3_11" name="Stock Movements" parent="menu_gbb_s3" action="stock.stock_move_line_action" sequence="110"/>
+    <menuitem id="menu_gbb_s3_12" name="Material Requisition / Issue" parent="menu_gbb_s3" action="action_gbb_material_requisition" sequence="120"/>
+    <menuitem id="menu_gbb_s3_13" name="Reorder &amp; Alerts" parent="menu_gbb_s3" action="stock.action_orderpoint" sequence="130"/>
+    <menuitem id="menu_gbb_s3_14" name="MRP Run (Replenishment)" parent="menu_gbb_s3" action="stock.action_orderpoint_replenish" sequence="140"/>
+    <menuitem id="menu_gbb_s4" name="Operations" parent="menu_gbb_root" sequence="40"/>
+    <menuitem id="menu_gbb_s4_1" name="Ops Dashboard (OEE)" parent="menu_gbb_s4" action="mrp.mrp_workcenter_productivity_report" sequence="10"/>
+    <menuitem id="menu_gbb_s4_2" name="Project Status (Manufacturing Orders)" parent="menu_gbb_s4" action="mrp.mrp_production_action" sequence="20"/>
+    <menuitem id="menu_gbb_s4_3" name="Completed Projects" parent="menu_gbb_s4" action="action_gbb_completed_projects" sequence="30"/>
+    <menuitem id="menu_gbb_s4_4" name="Operator Console (Shop Floor)" parent="menu_gbb_s4" action="action_gbb_operator_console" sequence="40" groups="mrp.group_mrp_user"/>
+    <menuitem id="menu_gbb_s4_5" name="Production (Work Orders)" parent="menu_gbb_s4" action="mrp.mrp_workorder_todo" sequence="50"/>
+    <menuitem id="menu_gbb_s4_6" name="Outsourced Process Status" parent="menu_gbb_s4" action="action_gbb_jobwork" sequence="60"/>
+    <menuitem id="menu_gbb_s4_7" name="Job Rejection" parent="menu_gbb_s4" action="action_gbb_job_rejection" sequence="70"/>
+    <menuitem id="menu_gbb_s4_8" name="Tool Breakage" parent="menu_gbb_s4" action="action_gbb_tool_breakage" sequence="80"/>
+    <menuitem id="menu_gbb_s4_9" name="Final Inspection" parent="menu_gbb_s4" action="action_gbb_chk_inspection" sequence="90"/>
+    <menuitem id="menu_gbb_s4_10" name="Instruments &amp; Calibration" parent="menu_gbb_s4" action="action_gbb_instruments" sequence="100"/>
+    <menuitem id="menu_gbb_s4_11" name="Machines" parent="menu_gbb_s4" action="action_gbb_machines" sequence="110"/>
+    <menuitem id="menu_gbb_s4_12" name="Maintenance Plan / Breakdowns" parent="menu_gbb_s4" action="maintenance.hr_equipment_request_action" sequence="120"/>
+    <menuitem id="menu_gbb_s4_13" name="JH Daily Check" parent="menu_gbb_s4" action="action_gbb_chk_jh" sequence="130"/>
+    <menuitem id="menu_gbb_s4_14" name="Work Centers" parent="menu_gbb_s4" action="mrp.mrp_workcenter_action" sequence="140"/>
+    <menuitem id="menu_gbb_s5" name="Analytics" parent="menu_gbb_root" sequence="50"/>
+    <menuitem id="menu_gbb_s5_1" name="Pipeline" parent="menu_gbb_s5" action="crm.crm_opportunity_report_action" sequence="10"/>
+    <menuitem id="menu_gbb_s5_2" name="Sales Analysis" parent="menu_gbb_s5" action="sale.action_order_report_all" sequence="20"/>
+    <menuitem id="menu_gbb_s5_3" name="Purchase Analysis" parent="menu_gbb_s5" action="purchase.action_purchase_order_report_all" sequence="30"/>
+    <menuitem id="menu_gbb_s5_4" name="Invoice Analysis" parent="menu_gbb_s5" action="account.action_account_invoice_report_all" sequence="40" groups="account.group_account_invoice"/>
+    <menuitem id="menu_gbb_s5_5" name="Sales Target (Team)" parent="menu_gbb_s5" action="sales_team.crm_team_action_sales" sequence="50"/>
+    <menuitem id="menu_gbb_s6" name="Accounts" parent="menu_gbb_root" sequence="60" groups="account.group_account_invoice"/>
+    <menuitem id="menu_gbb_s6_1" name="Customer Invoices" parent="menu_gbb_s6" action="account.action_move_out_invoice_type" sequence="10"/>
+    <menuitem id="menu_gbb_s6_2" name="Vendor Bills" parent="menu_gbb_s6" action="account.action_move_in_invoice_type" sequence="20"/>
+    <menuitem id="menu_gbb_s6_3" name="Payments" parent="menu_gbb_s6" action="account.action_account_payments" sequence="30"/>
+    <menuitem id="menu_gbb_s6_4" name="Journal Entries" parent="menu_gbb_s6" action="account.action_move_journal_line" sequence="40"/>
+    <menuitem id="menu_gbb_s6_5" name="Journal Items" parent="menu_gbb_s6" action="account.action_account_moves_all" sequence="50"/>
+    <menuitem id="menu_gbb_s6_6" name="Chart of Accounts" parent="menu_gbb_s6" action="account.action_account_form" sequence="60"/>
+    <menuitem id="menu_gbb_s6_7" name="GST Taxes" parent="menu_gbb_s6" action="account.action_tax_form" sequence="70"/>
+    <menuitem id="menu_gbb_s7" name="HR &amp; People" parent="menu_gbb_root" sequence="70" groups="hr.group_hr_user"/>
+    <menuitem id="menu_gbb_s7_1" name="Employees" parent="menu_gbb_s7" action="hr.open_view_employee_list_my" sequence="10"/>
+    <menuitem id="menu_gbb_s7_2" name="Clearance" parent="menu_gbb_s7" action="action_gbb_chk_clearance" sequence="20"/>
+    <menuitem id="menu_gbb_s7_3" name="Skills / Competency Matrix" parent="menu_gbb_s7" action="action_gbb_skills_matrix" sequence="30"/>
+    <menuitem id="menu_gbb_s7_4" name="Training" parent="menu_gbb_s7" action="action_gbb_training" sequence="40"/>
+    <menuitem id="menu_gbb_s7_5" name="Leave &amp; Sickness" parent="menu_gbb_s7" action="hr_holidays.hr_leave_action_action_approve_department" sequence="50"/>
+    <menuitem id="menu_gbb_s7_6" name="Attendance" parent="menu_gbb_s7" action="hr_attendance.hr_attendance_action" sequence="60"/>
+    <menuitem id="menu_gbb_s7_7" name="Advances" parent="menu_gbb_s7" action="action_gbb_advances" sequence="70" groups="hr.group_hr_manager"/>
+    <menuitem id="menu_gbb_s8" name="Security" parent="menu_gbb_root" sequence="80"/>
+    <menuitem id="menu_gbb_s8_1" name="Security In / Out" parent="menu_gbb_s8" action="action_gbb_gate_pass" sequence="10"/>
+    <menuitem id="menu_gbb_s8_2" name="Accident / Incident" parent="menu_gbb_s8" action="action_gbb_incident" sequence="20"/>
+    <menuitem id="menu_gbb_s9" name="Master" parent="menu_gbb_root" sequence="90"/>
+    <menuitem id="menu_gbb_s9_1" name="Customers" parent="menu_gbb_s9" action="action_gbb_customers" sequence="10"/>
+    <menuitem id="menu_gbb_s9_2" name="Fixture Types" parent="menu_gbb_s9" action="action_gbb_fixture_types" sequence="20"/>
+    <menuitem id="menu_gbb_s9_3" name="Material Rate Card &amp; Density" parent="menu_gbb_s9" action="action_gbb_material_grades" sequence="30"/>
+    <menuitem id="menu_gbb_s9_4" name="Standard RM Sizes" parent="menu_gbb_s9" action="action_gbb_rm_sizes" sequence="40"/>
+    <menuitem id="menu_gbb_s9_5" name="Checklist Formats (ISO)" parent="menu_gbb_s9" action="action_gbb_checklist_templates" sequence="50"/>
+    <menuitem id="menu_gbb_s10" name="Tools" parent="menu_gbb_root" sequence="100" groups="base.group_system"/>
+    <menuitem id="menu_gbb_s10_1" name="Load / Remove Demo Data" parent="menu_gbb_s10" action="action_gbb_demo_loader" sequence="10"/>
+    <menuitem id="menu_gbb_s10_2" name="User Management" parent="menu_gbb_s10" action="base.action_res_users" sequence="20"/>
+</odoo>

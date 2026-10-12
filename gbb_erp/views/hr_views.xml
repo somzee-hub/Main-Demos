@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_employee_form_gbb" model="ir.ui.view">
+        <field name="name">hr.employee.form.gbb</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet/notebook" position="inside">
+                <page string="GBB" name="gbb_hr">
+                    <group>
+                        <group string="Classification">
+                            <field name="gbb_staff_type"/>
+                            <field name="gbb_group"/>
+                        </group>
+                        <group string="Statutory" groups="hr.group_hr_user">
+                            <field name="gbb_pan"/>
+                            <field name="gbb_prev_epf"/>
+                            <field name="gbb_prev_esic"/>
+                        </group>
+                        <group string="Pay Setup (confidential)" groups="hr.group_hr_manager">
+                            <field name="gbb_salary_type"/>
+                            <field name="gbb_pay_category"/>
+                            <field name="gbb_pf"/>
+                            <field name="gbb_esic"/>
+                            <field name="gbb_advance_balance"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="gbb_advance_list" model="ir.ui.view">
+        <field name="name">gbb.employee.advance.list</field>
+        <field name="model">gbb.employee.advance</field>
+        <field name="arch" type="xml">
+            <list string="Employee Advances" editable="top" decoration-success="move_type == 'deduction'">
+                <field name="date"/>
+                <field name="employee_id"/>
+                <field name="move_type"/>
+                <field name="amount" sum="Total"/>
+                <field name="salary_month"/>
+                <field name="note"/>
+            </list>
+        </field>
+    </record>
+    <record id="action_gbb_advances" model="ir.actions.act_window">
+        <field name="name">Advances</field>
+        <field name="res_model">gbb.employee.advance</field>
+        <field name="view_mode">list,pivot</field>
+    </record>
+
+    <record id="action_gbb_training" model="ir.actions.act_window">
+        <field name="name">Training</field>
+        <field name="res_model">hr.resume.line</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain" eval="[('line_type_id', '=', ref('gbb_erp.resume_type_training'))]"/>
+        <field name="context" eval="{'default_line_type_id': ref('gbb_erp.resume_type_training')}"/>
+    </record>
+
+    <record id="action_gbb_skills_matrix" model="ir.actions.act_window">
+        <field name="name">Skills / Competency Matrix</field>
+        <field name="res_model">hr.employee.skill</field>
+        <field name="view_mode">pivot,list</field>
+    </record>
+</odoo>

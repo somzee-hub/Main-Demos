@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="project_form_gbb" model="ir.ui.view">
+        <field name="name">project.project.form.gbb</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_gbb_create_mo" type="object" string="Create Manufacturing Order"
+                        invisible="not gbb_is_design or gbb_design_stage not in ('released', 'completed')"/>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_gbb_checklists" type="object" class="oe_stat_button" icon="fa-check-square-o"
+                        invisible="not gbb_is_design">
+                    <field name="gbb_checklist_count" widget="statinfo" string="Checklists"/>
+                </button>
+                <button name="action_gbb_changes" type="object" class="oe_stat_button" icon="fa-random"
+                        invisible="not gbb_is_design">
+                    <field name="gbb_change_count" widget="statinfo" string="Design Changes"/>
+                </button>
+            </xpath>
+            <xpath expr="//sheet/notebook" position="before">
+                <group string="Design Project (GBB/DSG/FDPR-01)" invisible="not gbb_is_design">
+                    <group>
+                        <field name="gbb_project_code"/>
+                        <field name="gbb_lead_id"/>
+                        <field name="gbb_sale_order_id"/>
+                        <field name="gbb_fixture_type_id"/>
+                        <field name="gbb_fixture_qty"/>
+                    </group>
+                    <group>
+                        <field name="gbb_designer_id" widget="many2one_avatar_user"/>
+                        <field name="gbb_design_stage"/>
+                        <field name="gbb_released_date"/>
+                        <field name="gbb_bom_status" widget="badge"
+                               decoration-danger="gbb_bom_status == 'bom_pending'"
+                               decoration-warning="gbb_bom_status == 'po_pending'"
+                               decoration-success="gbb_bom_status == 'done'"/>
+                        <field name="gbb_group"/>
+                    </group>
+                </group>
+                <field name="gbb_is_design" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="project_list_gbb_design" model="ir.ui.view">
+        <field name="name">project.project.list.gbb.design</field>
+        <field name="model">project.project</field>
+        <field name="arch" type="xml">
+            <list string="Design Projects" decoration-danger="gbb_bom_status == 'bom_pending'">
+                <field name="gbb_project_code"/>
+                <field name="gbb_inquiry_no"/>
+                <field name="partner_id" string="Customer"/>
+                <field name="name" string="Fixture / Part"/>
+                <field name="gbb_fixture_qty" string="Qty"/>
+                <field name="gbb_designer_id" widget="many2one_avatar_user"/>
+                <field name="gbb_design_stage"/>
+                <field name="task_completion_percentage" string="Progress" widget="progressbar"/>
+                <field name="date_start" string="Start"/>
+                <field name="date" string="Target"/>
+                <field name="allocated_hours" string="Planned Hrs" widget="float_time" optional="show"/>
+                <field name="effective_hours" string="Actual Hrs" widget="float_time" optional="show"/>
+                <field name="gbb_bom_status" widget="badge"/>
+                <field name="gbb_group" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="project_search_gbb" model="ir.ui.view">
+        <field name="name">project.project.search.gbb</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project_project_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <field name="gbb_project_code"/>
+                <field name="gbb_inquiry_no"/>
+                <filter name="gbb_active_design" string="Active Design"
+                        domain="[('gbb_design_stage', 'not in', ('released', 'completed', 'hold'))]"/>
+                <filter name="gbb_released" string="Released to Mfg" domain="[('gbb_design_stage', '=', 'released')]"/>
+                <filter name="gbb_by_designer" string="Designer" context="{'group_by': 'gbb_designer_id'}"/>
+                <filter name="gbb_by_stage" string="Design Stage" context="{'group_by': 'gbb_design_stage'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_gbb_design_projects" model="ir.actions.act_window">
+        <field name="name">Design Projects</field>
+        <field name="res_model">project.project</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="domain">[('gbb_is_design', '=', True)]</field>
+        <field name="context">{'default_gbb_is_design': True, 'default_allow_timesheets': True}</field>
+        <field name="view_ids" eval="[(5, 0, 0), (0, 0, {'view_mode': 'list', 'view_id': ref('project_list_gbb_design')})]"/>
+    </record>
+
+    <record id="action_gbb_design_board" model="ir.actions.act_window">
+        <field name="name">Designer Board</field>
+        <field name="res_model">project.project</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="domain">[('gbb_is_design', '=', True), ('gbb_design_stage', '!=', 'completed')]</field>
+        <field name="context">{'group_by': 'gbb_designer_id', 'default_gbb_is_design': True}</field>
+    </record>
+
+    <record id="action_gbb_completed_projects" model="ir.actions.act_window">
+        <field name="name">Completed Projects</field>
+        <field name="res_model">project.project</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('gbb_is_design', '=', True), ('gbb_design_stage', '=', 'completed')]</field>
+        <field name="context">{'active_test': False}</field>
+        <field name="view_ids" eval="[(5, 0, 0), (0, 0, {'view_mode': 'list', 'view_id': ref('project_list_gbb_design')})]"/>
+    </record>
+
+    <record id="action_gbb_design_planner" model="ir.actions.act_window">
+        <field name="name">Monthly Design Planner</field>
+        <field name="res_model">project.task</field>
+        <field name="view_mode">calendar,list,kanban,form</field>
+        <field name="domain">[('project_id.gbb_is_design', '=', True)]</field>
+    </record>
+
+    <!-- Customer complaints on project tasks -->
+    <record id="task_form_gbb" model="ir.ui.view">
+        <field name="name">project.task.form.gbb</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_form2"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet/notebook" position="inside">
+                <page string="Complaint (CF-70)" name="gbb_complaint" invisible="not gbb_is_complaint">
+                    <group>
+                        <group>
+                            <field name="gbb_is_complaint" invisible="1"/>
+                            <field name="gbb_fixture_desc"/>
+                            <field name="gbb_complaint_date"/>
+                            <field name="gbb_customer_email" widget="email"/>
+                            <field name="gbb_group"/>
+                        </group>
+                        <group>
+                            <field name="gbb_closure_date"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="gbb_rca"/>
+                        <field name="gbb_action_taken"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="task_list_gbb_complaint" model="ir.ui.view">
+        <field name="name">project.task.list.gbb.complaint</field>
+        <field name="model">project.task</field>
+        <field name="arch" type="xml">
+            <list string="Complaint Register">
+                <field name="name" string="Problem"/>
+                <field name="partner_id" string="Customer"/>
+                <field name="gbb_fixture_desc"/>
+                <field name="gbb_complaint_date"/>
+                <field name="user_ids" widget="many2many_avatar_user" string="Assigned"/>
+                <field name="date_deadline" string="Target"/>
+                <field name="stage_id" string="Status"/>
+                <field name="gbb_closure_date" optional="show"/>
+                <field name="gbb_group" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_gbb_complaints" model="ir.actions.act_window">
+        <field name="name">Customer Complaints</field>
+        <field name="res_model">project.task</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="domain">[('project_id.gbb_is_complaint_project', '=', True)]</field>
+        <field name="context" eval="{'default_project_id': ref('gbb_erp.project_customer_complaints')}"/>
+        <field name="view_ids" eval="[(5, 0, 0), (0, 0, {'view_mode': 'kanban'}), (0, 0, {'view_mode': 'list', 'view_id': ref('task_list_gbb_complaint')})]"/>
+    </record>
+
+    <record id="action_gbb_daily_work" model="ir.actions.act_window">
+        <field name="name">Daily Work Sheet</field>
+        <field name="res_model">account.analytic.line</field>
+        <field name="view_mode">list,pivot,graph,form</field>
+        <field name="domain">[('project_id', '!=', False)]</field>
+        <field name="context">{'search_default_week': 1, 'is_timesheet': 1}</field>
+        <field name="view_id" ref="hr_timesheet.hr_timesheet_line_tree"/>
+        <field name="search_view_id" ref="hr_timesheet.hr_timesheet_line_search"/>
+    </record>
+</odoo>

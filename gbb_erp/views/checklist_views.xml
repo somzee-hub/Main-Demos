@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="gbb_checklist_form" model="ir.ui.view">
+        <field name="name">gbb.checklist.form</field>
+        <field name="model">gbb.checklist</field>
+        <field name="arch" type="xml">
+            <form string="Checklist">
+                <header>
+                    <button name="action_all_yes" type="object" string="All Yes" invisible="state == 'done' or kind not in ('fixture_design', 'cradle_design')"/>
+                    <button name="action_all_na" type="object" string="All NA" invisible="state == 'done' or kind not in ('fixture_design', 'cradle_design')"/>
+                    <button name="action_done" type="object" string="Mark Completed" class="btn-primary" invisible="state == 'done'"/>
+                    <button name="action_reset" type="object" string="Reopen" invisible="state != 'done'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                        <h3><field name="template_id" options="{'no_create': True}" readonly="state == 'done'"/></h3>
+                        <field name="doc_code" readonly="1" class="text-muted"/>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="kind" invisible="1"/>
+                            <field name="date"/>
+                            <field name="project_id"/>
+                            <field name="partner_id"/>
+                            <field name="subject"/>
+                            <field name="production_id" invisible="kind != 'final_inspection'"/>
+                            <field name="picking_id" invisible="kind != 'packaging'"/>
+                            <field name="equipment_id" invisible="kind != 'jh_daily'"/>
+                            <field name="employee_id" invisible="kind != 'clearance'"/>
+                        </group>
+                        <group>
+                            <field name="prepared_by_id"/>
+                            <field name="checked_by_ids" widget="many2many_avatar_user"/>
+                            <field name="approved_by_id"/>
+                            <field name="design_start" invisible="kind not in ('fixture_design', 'cradle_design')"/>
+                            <field name="design_end" invisible="kind not in ('fixture_design', 'cradle_design')"/>
+                            <field name="design_hours" invisible="kind not in ('fixture_design', 'cradle_design')"/>
+                            <field name="result" invisible="kind != 'final_inspection'"/>
+                            <field name="gbb_group"/>
+                        </group>
+                    </group>
+                    <div class="d-flex gap-3 mb-2">
+                        <span>Points <field name="count_total" class="fw-bold"/></span>
+                        <span>Answered <field name="count_answered" class="fw-bold"/></span>
+                        <span>Yes <field name="count_yes" class="fw-bold"/></span>
+                        <span>No <field name="count_no" class="fw-bold"/></span>
+                        <span>NA <field name="count_na" class="fw-bold"/></span>
+                        <field name="progress" widget="progressbar"/>
+                    </div>
+                    <field name="line_ids" readonly="state == 'done'">
+                        <list editable="bottom" decoration-bf="is_section" decoration-info="is_section"
+                              decoration-danger="answer_yn == 'no' or answer_ok == 'notok' or measure_result == 'fail'">
+                            <field name="sequence" widget="handle"/>
+                            <field name="is_section" column_invisible="1"/>
+                            <field name="answer_type" column_invisible="1"/>
+                            <field name="name"/>
+                            <field name="answer_yn" invisible="is_section or answer_type != 'yesno'" column_invisible="parent.kind not in ('fixture_design', 'cradle_design', 'final_inspection')"/>
+                            <field name="answer_ok" invisible="is_section or answer_type != 'okrev'" column_invisible="parent.kind not in ('internal_review', 'jh_daily')"/>
+                            <field name="answer_text" invisible="is_section or answer_type not in ('text', 'value', 'measure')" column_invisible="parent.kind not in ('fixture_design', 'cradle_design', 'final_inspection')"/>
+                            <field name="checked" invisible="is_section or answer_type != 'tick'" column_invisible="parent.kind not in ('packaging', 'clearance')"/>
+                            <field name="qty" invisible="is_section or answer_type != 'tick'" column_invisible="parent.kind != 'packaging'"/>
+                            <field name="score" invisible="is_section or answer_type != 'score'" column_invisible="parent.kind != 'vendor_assessment'"/>
+                            <field name="instrument" invisible="is_section" column_invisible="parent.kind != 'final_inspection'"/>
+                            <field name="spec" invisible="is_section" column_invisible="parent.kind != 'final_inspection'"/>
+                            <field name="nominal" invisible="answer_type != 'measure'" column_invisible="parent.kind != 'final_inspection'" optional="hide"/>
+                            <field name="tol_plus" invisible="answer_type != 'measure'" column_invisible="parent.kind != 'final_inspection'" optional="hide"/>
+                            <field name="tol_minus" invisible="answer_type != 'measure'" column_invisible="parent.kind != 'final_inspection'" optional="hide"/>
+                            <field name="actual" invisible="answer_type != 'measure'" column_invisible="parent.kind != 'final_inspection'"/>
+                            <field name="measure_result" invisible="answer_type != 'measure'" widget="badge"
+                                   decoration-success="measure_result == 'pass'" decoration-danger="measure_result == 'fail'" column_invisible="parent.kind != 'final_inspection'"/>
+                            <field name="remark" optional="show"/>
+                        </list>
+                    </field>
+                    <field name="remarks" placeholder="Remarks"/>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="gbb_checklist_list" model="ir.ui.view">
+        <field name="name">gbb.checklist.list</field>
+        <field name="model">gbb.checklist</field>
+        <field name="arch" type="xml">
+            <list string="Checklists">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="template_id"/>
+                <field name="project_id"/>
+                <field name="partner_id" optional="show"/>
+                <field name="subject" optional="show"/>
+                <field name="equipment_id" optional="hide"/>
+                <field name="prepared_by_id" widget="many2one_avatar_user"/>
+                <field name="count_yes" optional="show"/>
+                <field name="count_no" optional="show"/>
+                <field name="count_total" optional="show"/>
+                <field name="progress" widget="progressbar"/>
+                <field name="result" widget="badge" optional="show"/>
+                <field name="state" widget="badge"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="gbb_checklist_search" model="ir.ui.view">
+        <field name="name">gbb.checklist.search</field>
+        <field name="model">gbb.checklist</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="template_id"/>
+                <filter name="open" string="In Progress" domain="[('state', '=', 'draft')]"/>
+                <separator/>
+                <filter name="by_template" string="Format" context="{'group_by': 'template_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="gbb_checklist_template_form" model="ir.ui.view">
+        <field name="name">gbb.checklist.template.form</field>
+        <field name="model">gbb.checklist.template</field>
+        <field name="arch" type="xml">
+            <form string="Checklist Format">
+                <sheet>
+                    <group>
+                        <group><field name="name"/><field name="code"/></group>
+                        <group><field name="kind"/><field name="point_count"/></group>
+                    </group>
+                    <field name="line_ids">
+                        <list editable="bottom" decoration-bf="is_section">
+                            <field name="sequence" widget="handle"/>
+                            <field name="is_section"/>
+                            <field name="name"/>
+                            <field name="answer_type"/>
+                            <field name="nominal" optional="show"/>
+                            <field name="tol_plus" optional="show"/>
+                            <field name="tol_minus" optional="show"/>
+                            <field name="instrument" optional="show"/>
+                            <field name="spec" optional="show"/>
+                            <field name="default_qty" optional="hide"/>
+                        </list>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="gbb_checklist_template_list" model="ir.ui.view">
+        <field name="name">gbb.checklist.template.list</field>
+        <field name="model">gbb.checklist.template</field>
+        <field name="arch" type="xml">
+            <list string="Checklist Formats">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="kind"/>
+                <field name="point_count"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_gbb_checklist_templates" model="ir.actions.act_window">
+        <field name="name">Checklist Formats (ISO)</field>
+        <field name="res_model">gbb.checklist.template</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- One action per old screen -->
+    <record id="action_gbb_chk_fixture" model="ir.actions.act_window">
+        <field name="name">Design Check List</field>
+        <field name="res_model">gbb.checklist</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('kind', '=', 'fixture_design')]</field>
+        <field name="context" eval="{'default_template_id': ref('gbb_erp.tmpl_fixture_design')}"/>
+    </record>
+    <record id="action_gbb_chk_cradle" model="ir.actions.act_window">
+        <field name="name">Cradle Check List</field>
+        <field name="res_model">gbb.checklist</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('kind', '=', 'cradle_design')]</field>
+        <field name="context" eval="{'default_template_id': ref('gbb_erp.tmpl_cradle_design')}"/>
+    </record>
+    <record id="action_gbb_chk_review" model="ir.actions.act_window">
+        <field name="name">Internal Review</field>
+        <field name="res_model">gbb.checklist</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('kind', '=', 'internal_review')]</field>
+        <field name="context" eval="{'default_template_id': ref('gbb_erp.tmpl_internal_review')}"/>
+    </record>
+    <record id="action_gbb_chk_packaging" model="ir.actions.act_window">
+        <field name="name">Packaging List</field>
+        <field name="res_model">gbb.checklist</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('kind', '=', 'packaging')]</field>
+        <field name="context" eval="{'default_template_id': ref('gbb_erp.tmpl_packaging')}"/>
+    </record>
+    <record id="action_gbb_chk_inspection" model="ir.actions.act_window">
+        <field name="name">Final Inspection</field>
+        <field name="res_model">gbb.checklist</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('kind', '=', 'final_inspection')]</field>
+        <field name="context" eval="{'default_template_id': ref('gbb_erp.tmpl_insp_fixture')}"/>
+    </record>
+    <record id="action_gbb_chk_jh" model="ir.actions.act_window">
+        <field name="name">JH Daily Check</field>
+        <field name="res_model">gbb.checklist</field>
+        <field name="view_mode">list,form,pivot</field>
+        <field name="domain">[('kind', '=', 'jh_daily')]</field>
+        <field name="context" eval="{'default_template_id': ref('gbb_erp.tmpl_jh_daily')}"/>
+    </record>
+    <record id="action_gbb_chk_clearance" model="ir.actions.act_window">
+        <field name="name">Clearance</field>
+        <field name="res_model">gbb.checklist</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('kind', '=', 'clearance')]</field>
+        <field name="context" eval="{'default_template_id': ref('gbb_erp.tmpl_clearance')}"/>
+    </record>
+    <record id="action_gbb_chk_vendor" model="ir.actions.act_window">
+        <field name="name">Vendor Assessment</field>
+        <field name="res_model">gbb.checklist</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('kind', '=', 'vendor_assessment')]</field>
+        <field name="context" eval="{'default_template_id': ref('gbb_erp.tmpl_vendor')}"/>
+    </record>
+</odoo>

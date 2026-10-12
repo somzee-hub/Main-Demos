@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="gbb_fixture_type_list" model="ir.ui.view">
+        <field name="name">gbb.fixture.type.list</field>
+        <field name="model">gbb.fixture.type</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+    <record id="action_gbb_fixture_types" model="ir.actions.act_window">
+        <field name="name">Fixture Types</field>
+        <field name="res_model">gbb.fixture.type</field>
+        <field name="view_mode">list</field>
+    </record>
+
+    <record id="gbb_material_grade_list" model="ir.ui.view">
+        <field name="name">gbb.material.grade.list</field>
+        <field name="model">gbb.material.grade</field>
+        <field name="arch" type="xml">
+            <list string="Material Rate Card" editable="bottom">
+                <field name="name"/>
+                <field name="density"/>
+                <field name="rate_kg"/>
+                <field name="product_id"/>
+            </list>
+        </field>
+    </record>
+    <record id="action_gbb_material_grades" model="ir.actions.act_window">
+        <field name="name">Material Rate Card &amp; Density</field>
+        <field name="res_model">gbb.material.grade</field>
+        <field name="view_mode">list</field>
+    </record>
+
+    <record id="gbb_rm_size_list" model="ir.ui.view">
+        <field name="name">gbb.rm.size.list</field>
+        <field name="model">gbb.rm.size</field>
+        <field name="arch" type="xml">
+            <list string="Standard RM Sizes" editable="bottom">
+                <field name="shape"/>
+                <field name="grade_id"/>
+                <field name="diameter"/>
+                <field name="length"/>
+                <field name="width"/>
+            </list>
+        </field>
+    </record>
+    <record id="action_gbb_rm_sizes" model="ir.actions.act_window">
+        <field name="name">Standard RM Sizes</field>
+        <field name="res_model">gbb.rm.size</field>
+        <field name="view_mode">list</field>
+    </record>
+
+    <record id="res_partner_form_gbb" model="ir.ui.view">
+        <field name="name">res.partner.form.gbb</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_gbb_projects" type="object" class="oe_stat_button" icon="fa-pencil-square-o"
+                        invisible="gbb_project_count == 0">
+                    <field name="gbb_project_count" widget="statinfo" string="Projects"/>
+                </button>
+                <button name="action_gbb_complaints" type="object" class="oe_stat_button" icon="fa-exclamation-circle"
+                        invisible="gbb_complaint_count == 0">
+                    <field name="gbb_complaint_count" widget="statinfo" string="Complaints"/>
+                </button>
+            </xpath>
+            <xpath expr="//field[@name='industry_id']" position="after">
+                <field name="gbb_machine_types"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_gbb_customers" model="ir.actions.act_window">
+        <field name="name">Customers</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="domain">[('customer_rank', '>', 0)]</field>
+        <field name="context">{'res_partner_search_mode': 'customer', 'default_is_company': True}</field>
+    </record>
+
+    <record id="action_gbb_vendors" model="ir.actions.act_window">
+        <field name="name">Vendors</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="domain">[('supplier_rank', '>', 0)]</field>
+        <field name="context">{'res_partner_search_mode': 'supplier', 'default_is_company': True}</field>
+    </record>
+
+    <record id="action_gbb_std_items" model="ir.actions.act_window">
+        <field name="name">Layout: Standard / Bought-out Items</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('gbb_is_std', '=', True)]</field>
+        <field name="context">{'default_gbb_is_std': True, 'default_is_storable': True}</field>
+    </record>
+
+    <record id="action_gbb_stock_items" model="ir.actions.act_window">
+        <field name="name">Stock Items</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="context">{'search_default_filter_to_sell': 0}</field>
+    </record>
+</odoo>
